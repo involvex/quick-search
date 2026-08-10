@@ -20,6 +20,8 @@ import com.tk.quicksearch.tools.aiSearch.AiSearchLlmProviderId
 import com.tk.quicksearch.tools.aiSearch.CustomLlmProviderConfig
 import com.tk.quicksearch.tools.aiSearch.OpenAiModelCatalog
 import com.tk.quicksearch.tools.tasker.TaskerIntentTool
+import com.tk.quicksearch.search.core.TermuxExecutionMode
+import com.tk.quicksearch.search.core.TermuxSavedCommand
 
 /**
  * Stores user-driven overrides for the app grid such as hidden or pinned apps. Manages preferences
@@ -1466,6 +1468,27 @@ class UserAppPreferences(
         uiPreferences.getCurrencyConverterModel().ifBlank {
             getLlmModel(getCurrencyConverterProviderId())
         }
+
+    fun isTermuxIntegrationEnabled(): Boolean = uiPreferences.isTermuxIntegrationEnabled()
+    fun setTermuxIntegrationEnabled(enabled: Boolean) = uiPreferences.setTermuxIntegrationEnabled(enabled)
+
+    fun getTermuxExecutionMode(): TermuxExecutionMode =
+        try { TermuxExecutionMode.valueOf(uiPreferences.getTermuxExecutionMode().uppercase()) }
+        catch (e: Exception) { TermuxExecutionMode.BACKGROUND }
+
+    fun setTermuxExecutionMode(mode: TermuxExecutionMode) =
+        uiPreferences.setTermuxExecutionMode(mode.name.lowercase())
+
+    fun getTermuxDefaultExecutionMode(): TermuxExecutionMode =
+        try { TermuxExecutionMode.valueOf(uiPreferences.getTermuxExecutionMode().uppercase()) }
+        catch (e: Exception) { TermuxExecutionMode.BACKGROUND }
+
+    fun getTermuxPrefix(): String = uiPreferences.getTermuxPrefix()
+    fun setTermuxPrefix(prefix: String) = uiPreferences.setTermuxPrefix(prefix)
+
+    fun getTermuxSavedCommands(): List<TermuxSavedCommand> = uiPreferences.getTermuxSavedCommands()
+    fun setTermuxSavedCommands(commands: List<TermuxSavedCommand>) =
+        uiPreferences.setTermuxSavedCommands(commands)
     fun setCurrencyConverterModel(modelId: String) = uiPreferences.setCurrencyConverterModel(modelId)
     fun getCurrencyConverterAdvancedPayload(): Pair<Boolean, String> = uiPreferences.getCurrencyConverterAdvancedPayload()
     fun setCurrencyConverterAdvancedPayload(payload: String?, enabled: Boolean) = uiPreferences.setCurrencyConverterAdvancedPayload(payload, enabled)

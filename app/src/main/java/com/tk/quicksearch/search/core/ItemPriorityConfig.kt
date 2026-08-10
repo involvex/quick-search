@@ -41,6 +41,7 @@ object ItemPriorityConfig {
         WEATHER_RESULT,
         OTHER_RESULTS,
         AI_SEARCH_RESULT,
+        TERMUX_COMMAND_RESULT,
 
         // Section groups (contain multiple search results)
         APPS_SECTION,
@@ -91,6 +92,7 @@ object ItemPriorityConfig {
             add(ItemType.WEATHER_RESULT)
             add(ItemType.OTHER_RESULTS)
             add(ItemType.AI_SEARCH_RESULT)
+            add(ItemType.TERMUX_COMMAND_RESULT)
             addAll(sectionItemTypes)
             add(ItemType.WEB_SUGGESTIONS)
             add(ItemType.SEARCH_ENGINES_INLINE)

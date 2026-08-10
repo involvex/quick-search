@@ -195,6 +195,7 @@ internal fun SearchScreenContent(
         onWorldClockSearchClick: () -> Unit = {},
         onCustomToolSearchClick: () -> Unit = {},
         onTaskerIntentClick: () -> Unit = {},
+        onTermuxExecute: () -> Unit = {},
         onKeyboardSwitchToggle: () -> Unit,
         onOverlayNumberKeyboardUiChanged: ((Boolean, Boolean) -> Unit)? = null,
         onOverlayExpandRequest: () -> Unit = {},
@@ -1502,6 +1503,7 @@ internal fun SearchScreenContent(
                     )
                 },
                 selectedTopMatchIndex = selectedTopMatchIndex,
+                onTermuxExecute = onTermuxExecute,
         )
 
         // Fixed search engines section at the bottom (above keyboard, not scrollable)

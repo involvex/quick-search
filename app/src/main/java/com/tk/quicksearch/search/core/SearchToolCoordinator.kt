@@ -114,6 +114,9 @@ internal class SearchToolCoordinator(
                         query = trimmedQuery,
                         forceColorVisualizerMode = true,
                     )
+
+                SearchToolType.TERMUX_COMMAND ->
+                    CalculatorState()
             }
         }
 

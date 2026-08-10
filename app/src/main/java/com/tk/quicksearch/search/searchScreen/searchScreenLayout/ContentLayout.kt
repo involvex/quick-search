@@ -127,6 +127,7 @@ fun ContentLayout(
     onSearchHistorySelectedTabChange: (SearchHistoryTab) -> Unit = {},
     onOpenPermissionsSettings: () -> Unit = {},
     selectedTopMatchIndex: Int? = null,
+    onTermuxExecute: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val userPreferences = remember(context) { UserAppPreferences(context) }
@@ -1059,6 +1060,16 @@ fun ContentLayout(
                             onOpenAiSearchConfigure = onOpenAiSearchConfigure,
                             onPhoneNumberClick = onPhoneNumberClick,
                             onEmailClick = onEmailClick,
+                        )
+                    }
+                }
+
+                ItemPriorityConfig.ItemType.TERMUX_COMMAND_RESULT -> {
+                    if (state.termuxCommandState.isActive) {
+                        com.tk.quicksearch.tools.termux.TermuxCommandResult(
+                            commandState = state.termuxCommandState,
+                            showWallpaperBackground = effectiveShowWallpaperBackground,
+                            onExecute = onTermuxExecute,
                         )
                     }
                 }

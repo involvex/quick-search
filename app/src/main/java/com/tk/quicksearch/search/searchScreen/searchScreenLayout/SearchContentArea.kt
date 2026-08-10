@@ -153,6 +153,7 @@ fun SearchContentArea(
     onLauncherOverscrollDown: () -> Unit = {},
     onHomeDoubleTap: () -> Unit = {},
     selectedTopMatchIndex: Int? = null,
+    onTermuxExecute: () -> Unit = {},
 ) {
     val currentOnHomeDoubleTap by rememberUpdatedState(onHomeDoubleTap)
     val useOneHandedMode =
@@ -174,6 +175,7 @@ fun SearchContentArea(
                 state.isWeatherAliasMode ||
                 state.detectedCustomToolId != null
                 || state.detectedTaskerIntentId != null
+                || state.detectedTermuxCommandId != null
     val hasQuery = state.query.isNotBlank()
     val isUrlQuery = remember(state.query) { isLikelyWebUrl(state.query) }
     val hasAnySearchContent =
@@ -641,6 +643,7 @@ fun SearchContentArea(
                                 onSearchHistorySelectedTabChange = { searchHistorySelectedTab = it },
                                 onOpenPermissionsSettings = onOpenPermissionsSettings,
                                 selectedTopMatchIndex = selectedTopMatchIndex,
+                                onTermuxExecute = onTermuxExecute,
                             )
                         }
                     }

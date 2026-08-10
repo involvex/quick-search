@@ -1145,4 +1145,30 @@
     <string name="speed_bump_overlay_prompt">Opening %1$s soon…</string>
     <string name="speed_bump_overlay_title">Take a deep breath</string>
     <string name="speed_bump_title">SpeedBump</string>
+
+    <!-- Termux Integration -->
+    <string name="termux_command_label">Termux Command</string>
+    <string name="termux_execute_button">Execute</string>
+    <string name="termux_executing">Executing command…</string>
+    <string name="termux_exit_code">Exit code: %d</string>
+    <string name="termux_error_generic">Failed to execute command</string>
+    <string name="termux_permission_error">Termux permission not granted. Enable \"com.termux.permission.RUN_COMMAND\" in App Info → Permissions → Additional permissions.</string>
+    <string name="termux_not_installed">Termux is not installed</string>
+    <string name="termux_not_installed_hint">Install Termux from F-Droid or GitHub to run shell commands.</string>
+    <string name="termux_settings_title">Termux Integration</string>
+    <string name="termux_settings_description">Execute shell commands via Termux</string>
+    <string name="termux_settings_prefix_label">Command prefix</string>
+    <string name="termux_settings_execution_mode_label">Execution mode</string>
+    <string name="termux_execution_mode_background">Background (show results)</string>
+    <string name="termux_execution_mode_foreground">Foreground (open Termux)</string>
+    <string name="termux_saved_commands_title">Saved Commands</string>
+    <string name="termux_add_command_title">Add Termux Command</string>
+    <string name="termux_add_command_description">Save a command with an alias for quick access.</string>
+    <string name="termux_alias_label">Alias</string>
+    <string name="termux_command_label_field">Command</string>
+    <string name="termux_name_label">Name</string>
+    <string name="termux_add_command_button">Add Command</string>
+    <string name="termux_delete_command">Delete command</string>
+    <string name="termux_saved_alias">Alias: %1$s</string>
+    <string name="termux_alias_conflict">This alias is already in use</string>
 </resources>

@@ -116,6 +116,8 @@ data class SearchResultsState(
         val isWeatherAliasMode: Boolean = false,
         val detectedCustomToolId: String? = null,
         val detectedTaskerIntentId: String? = null,
+        val detectedTermuxCommandId: String? = null,
+        val termuxCommandState: TermuxCommandState = TermuxCommandState(),
         // Recent items (shown when query is blank)
         val recentItems: List<RecentSearchItem> = emptyList(),
         // Recently opened items filtered to the active alias section (shown when alias detected + query blank)
@@ -202,6 +204,10 @@ data class SearchFeatureState(
         val customTools: List<CustomTool> = emptyList(),
         val disabledCustomToolIds: Set<String> = emptySet(),
         val taskerIntentTools: List<TaskerIntentTool> = emptyList(),
+        val termuxSavedCommands: List<TermuxSavedCommand> = emptyList(),
+        val termuxIntegrationEnabled: Boolean = true,
+        val termuxDefaultExecutionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
+        val termuxPrefix: String = "$",
         // Search history
         val recentQueriesEnabled: Boolean = true,
         val recentQueriesDisplayCount: Int = UiPreferences.DEFAULT_RECENT_QUERIES_DISPLAY_COUNT,

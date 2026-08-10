@@ -213,6 +213,7 @@ enum class SearchToolType {
         UNIT_CONVERTER,
         DATE_CALCULATOR,
         COLOR_VISUALIZER,
+        TERMUX_COMMAND,
 }
 
 data class AiSearchState(
@@ -273,6 +274,40 @@ data class WeatherState(
         val usedModelId: String? = null,
         val llmProviderId: AiSearchLlmProviderId? = null,
         val errorMessage: String? = null,
+)
+
+enum class TermuxCommandStatus {
+        Idle,
+        Loading,
+        Success,
+        Error,
+        PermissionError,
+        NotInstalled,
+}
+
+data class TermuxCommandState(
+        val status: TermuxCommandStatus = TermuxCommandStatus.Idle,
+        val command: String? = null,
+        val stdout: String? = null,
+        val stderr: String? = null,
+        val exitCode: Int? = null,
+        val executionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
+        val errorMessage: String? = null,
+) {
+        val isActive: Boolean get() = command != null && status != TermuxCommandStatus.Idle
+}
+
+enum class TermuxExecutionMode {
+        BACKGROUND,
+        FOREGROUND,
+}
+
+data class TermuxSavedCommand(
+        val id: String,
+        val name: String,
+        val command: String,
+        val aliasCode: String,
+        val executionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
 )
 
 data class CalculatorState(
@@ -631,6 +666,10 @@ data class SearchUiState(
         val customTools: List<CustomTool> = emptyList(),
         val disabledCustomToolIds: Set<String> = emptySet(),
         val taskerIntentTools: List<TaskerIntentTool> = emptyList(),
+        val termuxSavedCommands: List<TermuxSavedCommand> = emptyList(),
+        val termuxIntegrationEnabled: Boolean = true,
+        val termuxDefaultExecutionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
+        val termuxPrefix: String = "$",
         val AiSearchState: AiSearchState = AiSearchState(),
         // Gemini
         val hasApiKey: Boolean = false,
@@ -670,6 +709,8 @@ data class SearchUiState(
         val isWeatherAliasMode: Boolean = false,
         val detectedCustomToolId: String? = null,
         val detectedTaskerIntentId: String? = null,
+        val detectedTermuxCommandId: String? = null,
+        val termuxCommandState: TermuxCommandState = TermuxCommandState(),
         val webSuggestionWasSelected: Boolean = false,
         // Onboarding / hints
         val showSearchEngineOnboarding: Boolean = false,
@@ -787,6 +828,8 @@ fun SearchUiState(
                 isWeatherAliasMode = results.isWeatherAliasMode,
                 detectedCustomToolId = results.detectedCustomToolId,
                 detectedTaskerIntentId = results.detectedTaskerIntentId,
+                detectedTermuxCommandId = results.detectedTermuxCommandId,
+                termuxCommandState = results.termuxCommandState,
                 recentItems = results.recentItems,
                 aliasRecentItems = results.aliasRecentItems,
                 recentResultRecencyIndex = results.recentResultRecencyIndex,
@@ -848,6 +891,10 @@ fun SearchUiState(
                 customTools = features.customTools,
                 disabledCustomToolIds = features.disabledCustomToolIds,
                 taskerIntentTools = features.taskerIntentTools,
+                termuxSavedCommands = features.termuxSavedCommands,
+                termuxIntegrationEnabled = features.termuxIntegrationEnabled,
+                termuxDefaultExecutionMode = features.termuxDefaultExecutionMode,
+                termuxPrefix = features.termuxPrefix,
                 recentQueriesEnabled = features.recentQueriesEnabled,
                 recentQueriesDisplayCount = features.recentQueriesDisplayCount,
                 appResultRowCount = features.appResultRowCount,

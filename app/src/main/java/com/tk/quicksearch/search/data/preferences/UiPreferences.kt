@@ -11,6 +11,8 @@ import com.tk.quicksearch.search.core.MessagingApp
 import com.tk.quicksearch.search.core.AppTheme
 import com.tk.quicksearch.search.core.SearchSection
 import com.tk.quicksearch.search.core.SearchSectionRegistry
+import com.tk.quicksearch.search.core.TermuxExecutionMode
+import com.tk.quicksearch.search.core.TermuxSavedCommand
 import com.tk.quicksearch.tools.aiSearch.AiSearchLlmProviderId
 
 /** Preferences for UI-related settings such as layout, messaging app, banners, etc. */
@@ -986,6 +988,63 @@ class UiPreferences(
     fun getCurrencyConverterModel(): String =
         prefs.getString(UiPreferences.KEY_CURRENCY_CONVERTER_MODEL, "").orEmpty()
 
+    fun isTermuxIntegrationEnabled(): Boolean = getBooleanPref(UiPreferences.KEY_TERMUX_ENABLED, true)
+
+    fun setTermuxIntegrationEnabled(enabled: Boolean) {
+        setBooleanPref(UiPreferences.KEY_TERMUX_ENABLED, enabled)
+    }
+
+    fun getTermuxExecutionMode(): String =
+        prefs.getString(UiPreferences.KEY_TERMUX_EXECUTION_MODE, "background") ?: "background"
+
+    fun setTermuxExecutionMode(mode: String) {
+        prefs.edit().putString(UiPreferences.KEY_TERMUX_EXECUTION_MODE, mode).apply()
+    }
+
+    fun getTermuxPrefix(): String =
+        prefs.getString(UiPreferences.KEY_TERMUX_PREFIX, "$") ?: "$"
+
+    fun setTermuxPrefix(prefix: String) {
+        prefs.edit().putString(UiPreferences.KEY_TERMUX_PREFIX, prefix).apply()
+    }
+
+    fun getTermuxSavedCommands(): List<TermuxSavedCommand> {
+        val json = prefs.getString(UiPreferences.KEY_TERMUX_SAVED_COMMANDS, null) ?: return emptyList()
+        return try {
+            val arr = org.json.JSONArray(json)
+            (0 until arr.length()).map { i ->
+                val obj = arr.getJSONObject(i)
+                TermuxSavedCommand(
+                    id = obj.getString("id"),
+                    name = obj.getString("name"),
+                    command = obj.getString("command"),
+                    aliasCode = obj.getString("aliasCode"),
+                    executionMode = try {
+                        TermuxExecutionMode.valueOf(obj.getString("executionMode"))
+                    } catch (e: Exception) {
+                        TermuxExecutionMode.BACKGROUND
+                    },
+                )
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun setTermuxSavedCommands(commands: List<TermuxSavedCommand>) {
+        val arr = org.json.JSONArray()
+        commands.forEach { cmd ->
+            val obj = org.json.JSONObject()
+            obj.put("id", cmd.id)
+            obj.put("name", cmd.name)
+            obj.put("command", cmd.command)
+            obj.put("aliasCode", cmd.aliasCode)
+            obj.put("executionMode", cmd.executionMode.name)
+            arr.put(obj)
+        }
+        prefs.edit().putString(UiPreferences.KEY_TERMUX_SAVED_COMMANDS, arr.toString()).apply()
+    }
+
     fun setCurrencyConverterModel(modelId: String) {
         val normalized = modelId.trim()
         if (normalized.isEmpty()) return
@@ -1446,6 +1505,12 @@ class UiPreferences(
         const val KEY_WORD_CLOCK_THINKING_ENABLED = "word_clock_thinking_enabled"
         const val KEY_DICTIONARY_GROUNDING_ENABLED = "dictionary_grounding_enabled"
         const val KEY_DICTIONARY_THINKING_ENABLED = "dictionary_thinking_enabled"
+        // Termux preferences
+        const val KEY_TERMUX_ENABLED = "termux_enabled"
+        const val KEY_TERMUX_EXECUTION_MODE = "termux_execution_mode"
+        const val KEY_TERMUX_PREFIX = "termux_prefix"
+        const val KEY_TERMUX_SAVED_COMMANDS = "termux_saved_commands"
+
         // Rate Quick Search prompt keys
         const val KEY_FIRST_APP_OPEN_TIME = "first_app_open_time"
         const val KEY_APP_OPEN_COUNT = "app_open_count"

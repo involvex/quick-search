@@ -1148,6 +1148,7 @@ fun SearchRoute(
             onWorldClockSearchClick = viewModel::executeWorldClockLookup,
             onCustomToolSearchClick = viewModel::executeCustomToolSearch,
             onTaskerIntentClick = viewModel::executeTaskerIntent,
+            onTermuxExecute = viewModel::executeTermuxCommand,
             onOpenToolsSettings = onOpenToolsSettings,
             onOpenCustomToolSettings = onOpenCustomToolSettings,
             onWelcomeAnimationCompleted = onWelcomeAnimationCompleted,

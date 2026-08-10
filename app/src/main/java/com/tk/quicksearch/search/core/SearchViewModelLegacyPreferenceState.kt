@@ -57,6 +57,7 @@ internal class SearchViewModelLegacyPreferenceState(
     var lockedWeatherAlias: Boolean = false
     var lockedCustomToolId: String? = null
     var lockedTaskerIntentId: String? = null
+    var lockedTermuxCommand: String? = null
     var clearQueryOnLaunch: Boolean = clearQueryOnLaunch
     var amazonDomain: String? = null
 

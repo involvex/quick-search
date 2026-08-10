@@ -43,6 +43,7 @@ import com.tk.quicksearch.tools.dateCalculator.DateCalculatorHandler
 import com.tk.quicksearch.tools.aiSearch.AiSearchHandler
 import com.tk.quicksearch.tools.unitConverter.UnitConverterHandler
 import com.tk.quicksearch.tools.tasker.TaskerIntegration
+import com.tk.quicksearch.tools.termux.TermuxCommandHandler
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
@@ -191,6 +192,10 @@ internal class SearchHandlerContainer(
 
     val dictionaryHandler by lazy { DictionaryHandler(appContext, userPreferences) }
     val weatherHandler by lazy { WeatherHandler(appContext, userPreferences) }
+
+    val termuxCommandHandler by lazy {
+        TermuxCommandHandler(context = appContext, userPreferences = userPreferences)
+    }
 
     val appSearchManager by lazy {
         AppSearchManager(

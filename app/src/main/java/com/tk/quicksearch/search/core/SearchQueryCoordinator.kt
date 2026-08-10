@@ -23,6 +23,7 @@ internal data class SearchQueryAliasState(
     val lockedWeatherAlias: Boolean,
     val lockedCustomToolId: String? = null,
     val lockedTaskerIntentId: String? = null,
+    val lockedTermuxCommand: String? = null,
 )
 
 internal class LatestSearchJobRunner<T>(
@@ -175,6 +176,8 @@ internal class SearchQueryCoordinator(
                 isWeatherAliasMode = false,
                 detectedCustomToolId = null,
                 detectedTaskerIntentId = null,
+                detectedTermuxCommandId = null,
+                termuxCommandState = TermuxCommandState(),
                 calculatorState = CalculatorState(),
                 currencyConverterState = CurrencyConverterState(),
                 worldClockState = WorldClockState(),
@@ -215,6 +218,7 @@ internal class SearchQueryCoordinator(
                 lockedWeatherAlias = if (isExclusive) false else current.lockedWeatherAlias,
                 lockedCustomToolId = if (isExclusive) null else current.lockedCustomToolId,
                 lockedTaskerIntentId = if (isExclusive) null else current.lockedTaskerIntentId,
+                lockedTermuxCommand = if (isExclusive) null else current.lockedTermuxCommand,
             ),
         )
     }
@@ -302,8 +306,31 @@ internal class SearchQueryCoordinator(
                     lockedWeatherAlias = false,
                     lockedCustomToolId = null,
                     lockedTaskerIntentId = featureId,
+                    lockedTermuxCommand = null,
                 ),
             )
+            return
+        }
+        if (featureId.startsWith("termux_cmd:")) {
+            val commandId = featureId.removePrefix("termux_cmd:")
+            val savedCommand = userPreferences.getTermuxSavedCommands().find { it.id == commandId }
+            if (savedCommand != null) {
+                val current = aliasStateProvider()
+                updateAliasState(
+                    current.copy(
+                        lockedShortcutTarget = null,
+                        lockedAliasSearchSection = null,
+                        lockedToolMode = null,
+                        lockedCurrencyConverterAlias = false,
+                        lockedWorldClockAlias = false,
+                        lockedDictionaryAlias = false,
+                        lockedWeatherAlias = false,
+                        lockedCustomToolId = null,
+                        lockedTaskerIntentId = null,
+                        lockedTermuxCommand = savedCommand.command,
+                    ),
+                )
+            }
             return
         }
         // Handle custom tool aliases
@@ -357,9 +384,10 @@ internal class SearchQueryCoordinator(
                         standaloneMode == AliasHandler.StandaloneFeatureAliasMode.DICTIONARY,
                     lockedWeatherAlias =
                         standaloneMode == AliasHandler.StandaloneFeatureAliasMode.WEATHER,
-                    lockedCustomToolId = null,
-                    lockedTaskerIntentId = null,
-                ),
+                lockedCustomToolId = null,
+                lockedTaskerIntentId = null,
+                lockedTermuxCommand = null,
+            ),
             )
             return
         }
@@ -409,6 +437,10 @@ internal class SearchQueryCoordinator(
                 CalculatorState(
                     isColorVisualizerMode = true,
                     toolType = SearchToolType.COLOR_VISUALIZER,
+                )
+            SearchToolType.TERMUX_COMMAND ->
+                CalculatorState(
+                    toolType = SearchToolType.TERMUX_COMMAND,
                 )
         }
 
@@ -496,15 +528,17 @@ internal class SearchQueryCoordinator(
         if (trimmedQuery.isBlank()) {
             val aliasState = aliasStateProvider()
             val hasLockedAliasMode =
-                aliasState.lockedShortcutTarget != null ||
-                    aliasState.lockedAliasSearchSection != null ||
-                    aliasState.lockedToolMode != null ||
-                    aliasState.lockedCurrencyConverterAlias ||
-                    aliasState.lockedWorldClockAlias ||
-                    aliasState.lockedDictionaryAlias ||
-                    aliasState.lockedWeatherAlias ||
-                    aliasState.lockedCustomToolId != null
-                    || aliasState.lockedTaskerIntentId != null
+            aliasState.lockedShortcutTarget != null ||
+            aliasState.lockedAliasSearchSection != null ||
+            aliasState.lockedToolMode != null ||
+            aliasState.lockedCurrencyConverterAlias ||
+            aliasState.lockedWorldClockAlias ||
+            aliasState.lockedDictionaryAlias ||
+            aliasState.lockedWeatherAlias ||
+            aliasState.lockedCustomToolId != null ||
+            aliasState.lockedTaskerIntentId != null ||
+            aliasState.lockedTermuxCommand != null
+                    || aliasState.lockedTermuxCommand != null
             if (clearShortcutWhenBlank && hasLockedAliasMode && newQuery.isNotEmpty()) {
                 cancelAppSearch()
                 appSearchManager.setNoMatchPrefix(null)
@@ -540,6 +574,7 @@ internal class SearchQueryCoordinator(
                         isWeatherAliasMode = aliasState.lockedWeatherAlias,
                         detectedCustomToolId = aliasState.lockedCustomToolId,
                         detectedTaskerIntentId = aliasState.lockedTaskerIntentId,
+                        detectedTermuxCommandId = aliasState.lockedTermuxCommand,
                         webSuggestionWasSelected = false,
                     )
                 }
@@ -595,6 +630,8 @@ internal class SearchQueryCoordinator(
                         if (clearShortcutWhenBlank) null else updatedAliasState.lockedCustomToolId,
                     detectedTaskerIntentId =
                         if (clearShortcutWhenBlank) null else updatedAliasState.lockedTaskerIntentId,
+                    detectedTermuxCommandId =
+                        if (clearShortcutWhenBlank) null else updatedAliasState.lockedTermuxCommand,
                     webSuggestionWasSelected = false,
                 )
             }
@@ -628,6 +665,52 @@ internal class SearchQueryCoordinator(
             AliasQueryResolution.None -> Unit
         }
 
+        val termuxPrefix = userPreferences.getTermuxPrefix()
+        if (userPreferences.isTermuxIntegrationEnabled() && trimmedQuery.startsWith(termuxPrefix) && trimmedQuery.length > termuxPrefix.length) {
+            val command = trimmedQuery.removePrefix(termuxPrefix).trim()
+            if (command.isNotEmpty()) {
+                val current = aliasStateProvider()
+                if (current.lockedTermuxCommand != command) {
+                    updateAliasState(
+                        current.copy(
+                            lockedShortcutTarget = null,
+                            lockedAliasSearchSection = null,
+                            lockedToolMode = null,
+                            lockedCurrencyConverterAlias = false,
+                            lockedWorldClockAlias = false,
+                            lockedDictionaryAlias = false,
+                            lockedWeatherAlias = false,
+                            lockedCustomToolId = null,
+                            lockedTaskerIntentId = null,
+                            lockedTermuxCommand = command,
+                        ),
+                    )
+                }
+                updateUiState { state ->
+                    state.copy(
+                        query = newQuery,
+                        detectedTermuxCommandId = command,
+                        termuxCommandState = TermuxCommandState(
+                            status = TermuxCommandStatus.Idle,
+                            command = command,
+                        ),
+                        searchResults = emptyList(),
+                        appShortcutResults = emptyList(),
+                        contactResults = emptyList(),
+                        fileResults = emptyList(),
+                        settingResults = emptyList(),
+                        appSettingResults = emptyList(),
+                        calendarEvents = emptyList(),
+                        noteResults = emptyList(),
+                        webSuggestions = emptyList(),
+                        webSuggestionsLoading = false,
+                        calculatorState = CalculatorState(),
+                    )
+                }
+                return
+            }
+        }
+
         val aliasState = aliasStateProvider()
         val detectedTarget: SearchTarget? = aliasState.lockedShortcutTarget
         val detectedAliasSearchSection: SearchSection? = aliasState.lockedAliasSearchSection
@@ -643,7 +726,8 @@ internal class SearchQueryCoordinator(
                         aliasState.lockedDictionaryAlias ||
                         aliasState.lockedWeatherAlias ||
                         aliasState.lockedCustomToolId != null ||
-                        aliasState.lockedTaskerIntentId != null,
+                        aliasState.lockedTaskerIntentId != null ||
+                        aliasState.lockedTermuxCommand != null,
             )
 
         val normalizedQuery = SearchTextNormalizer.normalizeForSearch(trimmedQuery)
@@ -671,6 +755,7 @@ internal class SearchQueryCoordinator(
                 aliasState.lockedWeatherAlias ||
                 aliasState.lockedCustomToolId != null ||
                 aliasState.lockedTaskerIntentId != null ||
+                aliasState.lockedTermuxCommand != null ||
                 (detectedAliasSearchSection != null && !shouldOnlySearchApps)
         val shouldRunSecondarySearchBatch =
             !showingTool &&
@@ -681,6 +766,7 @@ internal class SearchQueryCoordinator(
                 !aliasState.lockedWeatherAlias &&
                 aliasState.lockedCustomToolId == null &&
                 aliasState.lockedTaskerIntentId == null &&
+                aliasState.lockedTermuxCommand == null &&
                 detectedAliasSearchSection != SearchSection.APPS &&
                 secondarySearchOrchestrator.willRunSecondarySearch(newQuery)
         val shouldRunAppSearch =
@@ -726,6 +812,7 @@ internal class SearchQueryCoordinator(
                 isWeatherAliasMode = aliasState.lockedWeatherAlias,
                 detectedCustomToolId = aliasState.lockedCustomToolId,
                 detectedTaskerIntentId = aliasState.lockedTaskerIntentId,
+                detectedTermuxCommandId = aliasState.lockedTermuxCommand,
                 // Keep stale secondary results during debounce so cards don't flicker.
                 // When secondary search is not going to run (tool mode, alias mode, etc.),
                 // clear them immediately since the orchestrator won't clean them up.
@@ -817,7 +904,7 @@ internal class SearchQueryCoordinator(
                         webSuggestionsLoading = false,
                     )
                 }
-            } else if (aliasState.lockedWorldClockAlias || aliasState.lockedDictionaryAlias || aliasState.lockedWeatherAlias || aliasState.lockedCustomToolId != null || aliasState.lockedTaskerIntentId != null) {
+            } else if (aliasState.lockedWorldClockAlias || aliasState.lockedDictionaryAlias || aliasState.lockedWeatherAlias || aliasState.lockedCustomToolId != null || aliasState.lockedTaskerIntentId != null || aliasState.lockedTermuxCommand != null) {
                 secondarySearchOrchestrator.cancel()
                 updateResultsState {
                     it.copy(
