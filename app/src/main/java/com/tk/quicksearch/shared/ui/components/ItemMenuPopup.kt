@@ -138,7 +138,7 @@ fun ItemMenuPopup(
             }
             if (actions.isNotEmpty()) {
                 if (showGridTitles) ItemMenuSectionTitle(actionsTitle)
-                ItemMenuTileGrid(tiles = actions, fillSingleRow = true)
+                ItemMenuTileGrid(tiles = actions)
             }
             val hasGrids = shortcuts.isNotEmpty() || actions.isNotEmpty()
             val visibleButtonRows = buttonRows.filter { it.isNotEmpty() }
@@ -175,11 +175,9 @@ private fun ItemMenuSectionTitle(text: String) {
 }
 
 @Composable
-private fun ItemMenuTileGrid(
-    tiles: List<ItemMenuTile>,
-    fillSingleRow: Boolean = false,
-) {
-    val spreadAcrossRow = fillSingleRow && tiles.size <= ItemMenuGridColumns
+private fun ItemMenuTileGrid(tiles: List<ItemMenuTile>) {
+    // A single short row spreads evenly across the full width; multi-row grids stay aligned.
+    val spreadAcrossRow = tiles.size <= ItemMenuGridColumns
     Column(verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall)) {
         tiles.chunked(ItemMenuGridColumns).forEach { row ->
             Row(
