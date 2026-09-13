@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">फ़ाइल</string>
     <string name="notification_pinned_item_type_note">नोट</string>
     <string name="action_remove">हटाएं</string>
+    <string name="app_swipe_current_action">वर्तमान क्रिया</string>
+    <string name="app_swipe_up_picker_title">%1$s के लिए ऊपर स्वाइप क्रिया चुनें</string>
+    <string name="app_swipe_down_picker_title">%1$s के लिए नीचे स्वाइप क्रिया चुनें</string>
+    <string name="app_swipe_picker_tip">ऐप आइकन पर स्वाइप करने से चुना गया आइटम ऐप सुझावों और खोज परिणामों दोनों में खुलेगा</string>
+    <string name="app_swipe_picker_search_hint">ऐप्स, संपर्क आदि खोजें</string>
+    <string name="app_swipe_up_set_toast">%1$s के लिए ऊपर स्वाइप जेस्चर सेट किया गया</string>
+    <string name="app_swipe_down_set_toast">%1$s के लिए नीचे स्वाइप जेस्चर सेट किया गया</string>
     <string name="action_remove_from_history">इतिहास से हटाएं</string>
     <string name="action_reset_app_shortcut_icon">डिफ़ॉल्ट आइकन पर रीसेट करें</string>
     <string name="action_retry">फिर से कोशिश करें</string>
@@ -939,9 +946,10 @@
     <string name="widget_background_color_custom_dialog_title">कस्टम रंग</string>
     <string name="widget_border_color">बॉर्डर रंग</string>
     <string name="widget_custom_button_add_desc">कस्टम बटन जोड़ें</string>
-    <string name="widget_custom_buttons_dialog_hint">आप ऐप्स, ऐप शॉर्टकट्स, कॉन्टैक्ट्स, फाइलें, फोल्डर्स, नोट्स और डिवाइस सेटिंग्स खोज सकते हैं।</string>
+    <string name="widget_custom_buttons_dialog_hint">ऐप्स, ऐप शॉर्टकट्स, कॉन्टैक्ट्स, फाइलें, फोल्डर्स, नोट्स और डिवाइस सेटिंग्स खोजें।</string>
     <string name="widget_custom_buttons_dialog_title">क्रिया चुनें</string>
     <string name="widget_custom_buttons_no_results">कोई परिणाम नहीं मिला।</string>
+    <string name="widget_custom_buttons_filter_all">सभी</string>
     <string name="widget_custom_buttons_restriction">जब कस्टम बटन सक्रिय हों, तब उपलब्ध नहीं।</string>
     <string name="widget_custom_buttons_title">कस्टम बटन</string>
     <string name="widget_custom_buttons_widget_title">कस्टम बटन विजेट</string>

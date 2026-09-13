@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">Archivo</string>
     <string name="notification_pinned_item_type_note">Nota</string>
     <string name="action_remove">Eliminar</string>
+    <string name="app_swipe_current_action">Acción actual</string>
+    <string name="app_swipe_up_picker_title">Seleccionar acción de deslizar hacia arriba para %1$s</string>
+    <string name="app_swipe_down_picker_title">Seleccionar acción de deslizar hacia abajo para %1$s</string>
+    <string name="app_swipe_picker_tip">Deslizar sobre el icono de la aplicación abrirá el elemento seleccionado tanto en las sugerencias de aplicaciones como en los resultados de búsqueda</string>
+    <string name="app_swipe_picker_search_hint">Buscar apps, contactos, etc.</string>
+    <string name="app_swipe_up_set_toast">Gesto de deslizar hacia arriba configurado para %1$s</string>
+    <string name="app_swipe_down_set_toast">Gesto de deslizar hacia abajo configurado para %1$s</string>
     <string name="action_remove_from_history">Eliminar del historial</string>
     <string name="action_reset_app_shortcut_icon">Restablecer icono predeterminado</string>
     <string name="action_retry">Reintentar</string>
@@ -939,9 +946,10 @@
     <string name="widget_background_color_custom_dialog_title">Color personalizado</string>
     <string name="widget_border_color">Color del borde</string>
     <string name="widget_custom_button_add_desc">Añadir botón personalizado</string>
-    <string name="widget_custom_buttons_dialog_hint">Puedes buscar aplicaciones, accesos directos, contactos, archivos, carpetas, notas y ajustes del dispositivo.</string>
+    <string name="widget_custom_buttons_dialog_hint">Busca aplicaciones, accesos directos, contactos, archivos, carpetas, notas y ajustes del dispositivo.</string>
     <string name="widget_custom_buttons_dialog_title">Seleccionar acción</string>
     <string name="widget_custom_buttons_no_results">No se encontraron resultados.</string>
+    <string name="widget_custom_buttons_filter_all">Todo</string>
     <string name="widget_custom_buttons_restriction">No disponible cuando los botones personalizados están activos.</string>
     <string name="widget_custom_buttons_title">Botones personalizados</string>
     <string name="widget_custom_buttons_widget_title">Widget de botones personalizados</string>

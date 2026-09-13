@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +66,7 @@ import com.tk.quicksearch.tools.aiTools.WeatherIntentParser
 import com.tk.quicksearch.overlay.OverlayModeController
 import com.tk.quicksearch.search.apps.notificationDots.rememberNotificationDotsCheckedChange
 import com.tk.quicksearch.search.apps.speedBump.SpeedBump
+import com.tk.quicksearch.search.apps.swipeGestures.AppSwipeGestures
 import com.tk.quicksearch.search.apps.speedBump.SpeedBumpOverlay
 import com.tk.quicksearch.shared.permissions.PermissionSettingsDialog
 import com.tk.quicksearch.shared.permissions.PermissionHelper
@@ -134,6 +136,20 @@ fun SearchRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    // The app swipe action picker searches through the shared query. While it's open (and until
+    // the original query is restored), keep the search screen on a snapshot so its search bar and
+    // results don't mirror what's typed in the picker.
+    val appSwipePickerRequest by AppSwipeGestures.pickerRequest.collectAsState()
+    var searchScreenSnapshot by remember { mutableStateOf<SearchUiState?>(null) }
+    if (appSwipePickerRequest != null && searchScreenSnapshot == null) {
+        searchScreenSnapshot = uiState
+    }
+    val snapshot = searchScreenSnapshot
+    if (appSwipePickerRequest == null && snapshot != null && uiState.query == snapshot.query) {
+        searchScreenSnapshot = null
+    }
+    val searchScreenState = searchScreenSnapshot ?: uiState
     val context = LocalContext.current
 
     val nicknameUpdateVersion = uiState.nicknameUpdateVersion
@@ -699,7 +715,7 @@ fun SearchRoute(
                     } else {
                         Modifier.fillMaxSize().then(swipeNavigationModifier)
                     },
-            state = uiState,
+            state = searchScreenState,
             onQueryChanged = viewModel::onQueryChange,
             onSelectRetainedQueryHandled = viewModel::consumeRetainedQuerySelectionRequest,
             onRestoreSearchKeyboardHandled = viewModel::consumeSearchKeyboardRestoreRequest,
@@ -1092,6 +1108,11 @@ fun SearchRoute(
                 onCancel = { speedBumpApp = null },
             )
         }
+
+        com.tk.quicksearch.search.apps.swipeGestures.AppSwipeGesturePickerHost(
+            searchState = uiState,
+            onQueryChange = viewModel::onQueryChange,
+        )
 
         previewFile?.let { file ->
             com.tk.quicksearch.search.files.FilePreviewBottomSheet(

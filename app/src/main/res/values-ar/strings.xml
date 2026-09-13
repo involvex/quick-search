@@ -133,6 +133,13 @@
     <string name="notification_pinned_item_type_file">ملف</string>
     <string name="notification_pinned_item_type_note">ملاحظة</string>
     <string name="action_remove">إزالة</string>
+    <string name="app_swipe_current_action">الإجراء الحالي</string>
+    <string name="app_swipe_up_picker_title">اختر إجراء السحب لأعلى لـ %1$s</string>
+    <string name="app_swipe_down_picker_title">اختر إجراء السحب لأسفل لـ %1$s</string>
+    <string name="app_swipe_picker_tip">سيؤدي السحب على أيقونة التطبيق إلى فتح العنصر المحدد في اقتراحات التطبيقات ونتائج البحث</string>
+    <string name="app_swipe_picker_search_hint">ابحث في التطبيقات وجهات الاتصال وغيرها</string>
+    <string name="app_swipe_up_set_toast">تم تعيين إيماءة السحب لأعلى لـ %1$s</string>
+    <string name="app_swipe_down_set_toast">تم تعيين إيماءة السحب لأسفل لـ %1$s</string>
     <string name="action_remove_from_history">إزالة من السجل</string>
     <string name="action_reset_app_shortcut_icon">إعادة تعيين إلى الأيقونة الافتراضية</string>
     <string name="action_retry">إعادة المحاولة</string>
@@ -940,9 +947,10 @@
     <string name="widget_background_color_custom_dialog_title">لون مخصص</string>
     <string name="widget_border_color">لون الحدود</string>
     <string name="widget_custom_button_add_desc">إضافة زر مخصص</string>
-    <string name="widget_custom_buttons_dialog_hint">يمكنك البحث عن التطبيقات، واختصارات التطبيقات، وجهات الاتصال، والملفات، والمجلدات، والملاحظات، وإعدادات الجهاز.</string>
+    <string name="widget_custom_buttons_dialog_hint">ابحث عن التطبيقات، واختصارات التطبيقات، وجهات الاتصال، والملفات، والمجلدات، والملاحظات، وإعدادات الجهاز.</string>
     <string name="widget_custom_buttons_dialog_title">اختر الإجراء</string>
     <string name="widget_custom_buttons_no_results">لم يتم العثور على أي نتائج.</string>
+    <string name="widget_custom_buttons_filter_all">الكل</string>
     <string name="widget_custom_buttons_restriction">غير متاح عندما تكون الأزرار المخصصة مفعلة.</string>
     <string name="widget_custom_buttons_title">أزرار مخصصة</string>
     <string name="widget_custom_buttons_widget_title">عنصر واجهة مستخدم الأزرار المخصصة</string>

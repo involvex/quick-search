@@ -3,7 +3,6 @@ package com.tk.quicksearch.shared.ui.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,7 +48,8 @@ data class ItemMenuTile(
 
 /**
  * A full-width row with a leading icon, label, optional trailing value and a chevron. Also used for
- * the side-by-side footer buttons, where only the icon, label and [destructive] style apply.
+ * the side-by-side button rows, where only the icon, label, long click, [destructive] style and
+ * [anchoredContent] apply.
  */
 data class ItemMenuRow(
     val label: String,
@@ -58,6 +58,8 @@ data class ItemMenuRow(
     val onLongClick: (() -> Unit)? = null,
     val trailingText: String? = null,
     val destructive: Boolean = false,
+    /** Content anchored to a side-by-side button, such as a small dropdown shown on long press. */
+    val anchoredContent: (@Composable () -> Unit)? = null,
 )
 
 private const val ItemMenuGridColumns = 4
@@ -66,8 +68,8 @@ private const val ItemMenuGridColumns = 4
  * Long-press menu shared by apps, app shortcuts and files.
  *
  * Layout, top to bottom: an optional Shortcuts grid, an Actions grid of quick one-tap actions,
- * then a list of settings-like [rows], and finally [footer] buttons sharing one row (e.g. App info
- * and Uninstall). Empty groups are skipped, and grid titles are only shown when both grids are
+ * then [buttonRows] of side-by-side buttons (e.g. Swipe up and Swipe down), a list of settings-like [rows],
+ * and finally [footer] buttons sharing one row (e.g. App info and Uninstall). Empty groups are skipped, and grid titles are only shown when both grids are
  * present. An Actions grid that fits in one row spreads its tiles across the full width.
  */
 @Composable
@@ -80,6 +82,7 @@ fun ItemMenuPopup(
     rows: List<ItemMenuRow>,
     leadingContent: (@Composable () -> Unit)? = null,
     shortcuts: List<ItemMenuTile> = emptyList(),
+    buttonRows: List<List<ItemMenuRow>> = emptyList(),
     footer: List<ItemMenuRow> = emptyList(),
 ) {
     val dialogBackground = AppColors.DialogBackground
@@ -91,6 +94,8 @@ fun ItemMenuPopup(
         contentCardColor = dialogBackground,
         contentSpacing = 0.dp,
         headerSpacing = DesignTokens.SpacingMedium,
+        // The popup's own bottom padding already separates the last item from the edge.
+        contentBottomPadding = 0.dp,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             val showGridTitles = shortcuts.isNotEmpty() && actions.isNotEmpty()
@@ -103,22 +108,25 @@ fun ItemMenuPopup(
                 if (showGridTitles) ItemMenuSectionTitle(actionsTitle)
                 ItemMenuTileGrid(tiles = actions, fillSingleRow = true)
             }
+            val hasGrids = shortcuts.isNotEmpty() || actions.isNotEmpty()
+            val visibleButtonRows = buttonRows.filter { it.isNotEmpty() }
+            if (visibleButtonRows.isNotEmpty()) {
+                if (hasGrids) Spacer(Modifier.height(DesignTokens.SpacingMedium))
+                Column(verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall)) {
+                    visibleButtonRows.forEach { buttons -> ItemMenuButtonRow(buttons) }
+                }
+            }
             if (rows.isNotEmpty()) {
-                if (shortcuts.isNotEmpty() || actions.isNotEmpty()) {
+                if (visibleButtonRows.isNotEmpty()) {
+                    Spacer(Modifier.height(DesignTokens.SpacingSmall))
+                } else if (hasGrids) {
                     Spacer(Modifier.height(DesignTokens.SpacingMedium))
                 }
                 rows.forEach { row -> ItemMenuListRow(row) }
             }
             if (footer.isNotEmpty()) {
                 Spacer(Modifier.height(DesignTokens.SpacingMedium))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall),
-                ) {
-                    footer.forEach { button ->
-                        ItemMenuFooterButton(button = button, modifier = Modifier.weight(1f))
-                    }
-                }
+                ItemMenuButtonRow(footer)
             }
         }
     }
@@ -278,10 +286,24 @@ private fun ItemMenuListRow(row: ItemMenuRow) {
 }
 
 @Composable
-private fun ItemMenuFooterButton(
+private fun ItemMenuButtonRow(buttons: List<ItemMenuRow>) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall),
+    ) {
+        buttons.forEach { button ->
+            ItemMenuButton(button = button, modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ItemMenuButton(
     button: ItemMenuRow,
     modifier: Modifier = Modifier,
 ) {
+    val view = LocalView.current
     val contentColor =
         if (button.destructive) MaterialTheme.colorScheme.error else AppColors.DialogText
     val containerColor =
@@ -290,28 +312,43 @@ private fun ItemMenuFooterButton(
         } else {
             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
         }
-    Row(
-        modifier = modifier
-            .heightIn(min = 48.dp)
-            .clip(DesignTokens.ShapeSmall)
-            .background(containerColor)
-            .clickable(onClick = button.onClick)
-            .padding(horizontal = DesignTokens.SpacingMedium, vertical = DesignTokens.SpacingSmall),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall, Alignment.CenterHorizontally),
-    ) {
-        Box(modifier = Modifier.size(20.dp), contentAlignment = Alignment.Center) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                button.icon()
+    Box(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 48.dp)
+                .clip(DesignTokens.ShapeSmall)
+                .background(containerColor)
+                .combinedClickable(
+                    onClick = button.onClick,
+                    onLongClick = button.onLongClick?.let { onLongClick ->
+                        {
+                            hapticConfirm(view)()
+                            onLongClick()
+                        }
+                    },
+                )
+                .padding(horizontal = DesignTokens.SpacingMedium, vertical = DesignTokens.SpacingSmall),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall, Alignment.CenterHorizontally),
+        ) {
+            Box(modifier = Modifier.size(20.dp), contentAlignment = Alignment.Center) {
+                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                    button.icon()
+                }
             }
+            Text(
+                text = button.label,
+                style = MaterialTheme.typography.labelLarge,
+                color = contentColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
+            )
         }
-        Text(
-            text = button.label,
-            style = MaterialTheme.typography.labelLarge,
-            color = contentColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f, fill = false),
-        )
+        button.anchoredContent?.let { content ->
+            // Matches the button's bounds so anchored popups position and size against it.
+            Box(modifier = Modifier.matchParentSize()) { content() }
+        }
     }
 }

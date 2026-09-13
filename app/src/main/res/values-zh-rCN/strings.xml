@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">文件</string>
     <string name="notification_pinned_item_type_note">笔记</string>
     <string name="action_remove">移除</string>
+    <string name="app_swipe_current_action">当前操作</string>
+    <string name="app_swipe_up_picker_title">为 %1$s 选择上滑操作</string>
+    <string name="app_swipe_down_picker_title">为 %1$s 选择下滑操作</string>
+    <string name="app_swipe_picker_tip">在应用图标上滑动将打开所选项目，适用于应用建议和搜索结果</string>
+    <string name="app_swipe_picker_search_hint">搜索应用、联系人等</string>
+    <string name="app_swipe_up_set_toast">已为 %1$s 设置上滑手势</string>
+    <string name="app_swipe_down_set_toast">已为 %1$s 设置下滑手势</string>
     <string name="action_remove_from_history">从历史记录中移除</string>
     <string name="action_reset_app_shortcut_icon">恢复默认图标</string>
     <string name="action_retry">重试</string>
@@ -929,9 +936,10 @@
     <string name="widget_background_color_custom_dialog_title">自定义色彩</string>
     <string name="widget_border_color">边框颜色</string>
     <string name="widget_custom_button_add_desc">添加自定义按钮</string>
-    <string name="widget_custom_buttons_dialog_hint">您可以关联搜索应用、应用快捷方式、联系人、文件、文件夹、笔记及设备系统设置。</string>
+    <string name="widget_custom_buttons_dialog_hint">搜索应用、应用快捷方式、联系人、文件、文件夹、笔记及设备系统设置。</string>
     <string name="widget_custom_buttons_dialog_title">选择关联操作</string>
     <string name="widget_custom_buttons_no_results">未找到匹配项结果。</string>
+    <string name="widget_custom_buttons_filter_all">全部</string>
     <string name="widget_custom_buttons_restriction">当自定义按钮处于激活状态时此项不可用。</string>
     <string name="widget_custom_buttons_title">自定义快捷按钮</string>
     <string name="widget_custom_buttons_widget_title">自定义按钮小部件</string>

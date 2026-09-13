@@ -1,5 +1,6 @@
 package com.tk.quicksearch.search.apps
 
+import com.tk.quicksearch.search.apps.swipeGestures.appSwipeGestures
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.Animatable
@@ -819,7 +820,7 @@ private fun AllAppsDialogGridItem(
                 verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingXSmall),
         ) {
             Box(
-                    modifier = Modifier.size(iconSurfaceSize),
+                    modifier = Modifier.size(iconSurfaceSize).appSwipeGestures(app),
                     contentAlignment = Alignment.Center,
             ) {
                 iconResult.bitmap?.let { icon ->
@@ -1528,7 +1529,7 @@ private fun AppGridItem(
                     appName = appInfo.appName,
                     onClick = { if (!showOptions) appActions.onClick() },
                     onLongClick = if (isDraggable) null else ({ showOptions = true }),
-                    gestureModifier = dragModifier,
+                    gestureModifier = Modifier.appSwipeGestures(appInfo).then(dragModifier),
                     clickGesturesEnabled = !isDraggable,
                     appIconSurfaceSize = appIconSurfaceSize,
                     appIconSize = appIconSize,

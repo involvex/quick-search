@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">ఫైల్</string>
     <string name="notification_pinned_item_type_note">నోట్</string>
     <string name="action_remove">తొలగించు</string>
+    <string name="app_swipe_current_action">ప్రస్తుత చర్య</string>
+    <string name="app_swipe_up_picker_title">%1$s కోసం పైకి స్వైప్ చర్యను ఎంచుకోండి</string>
+    <string name="app_swipe_down_picker_title">%1$s కోసం కిందికి స్వైప్ చర్యను ఎంచుకోండి</string>
+    <string name="app_swipe_picker_tip">యాప్ ఐకాన్‌పై స్వైప్ చేస్తే ఎంచుకున్న అంశం యాప్ సూచనలు మరియు శోధన ఫలితాలు రెండింటిలోనూ తెరుచుకుంటుంది</string>
+    <string name="app_swipe_picker_search_hint">యాప్‌లు, పరిచయాలు మొదలైనవి శోధించండి</string>
+    <string name="app_swipe_up_set_toast">%1$s కోసం పైకి స్వైప్ సంజ్ఞ సెట్ చేయబడింది</string>
+    <string name="app_swipe_down_set_toast">%1$s కోసం కిందికి స్వైప్ సంజ్ఞ సెట్ చేయబడింది</string>
     <string name="action_remove_from_history">చరిత్ర నుండి తొలగించు</string>
     <string name="action_reset_app_shortcut_icon">డిఫాల్ట్ ఐకాన్‌కి పునరుద్ధరించు</string>
     <string name="action_retry">మళ్ళీ ప్రయత్నించు</string>
@@ -939,9 +946,10 @@
     <string name="widget_background_color_custom_dialog_title">కస్టమ్ రంగు</string>
     <string name="widget_border_color">అంచు రంగు</string>
     <string name="widget_custom_button_add_desc">కస్టమ్ బటన్‌ను జోడించండి</string>
-    <string name="widget_custom_buttons_dialog_hint">మీరు యాప్‌లు, యాప్ షార్ట్‌కట్‌లు, పరిచయాలు, ఫైళ్లు, ఫోల్డర్‌లు, గమనికలు &amp; పరికర సెట్టింగ్‌ల కోసం శోధించవచ్చు.</string>
+    <string name="widget_custom_buttons_dialog_hint">యాప్‌లు, యాప్ షార్ట్‌కట్‌లు, పరిచయాలు, ఫైళ్లు, ఫోల్డర్‌లు, గమనికలు &amp; పరికర సెట్టింగ్‌ల కోసం శోధించండి.</string>
     <string name="widget_custom_buttons_dialog_title">చర్యను ఎంచుకోండి</string>
     <string name="widget_custom_buttons_no_results">ఫలితాలు ఏవీ కనుగొనబడలేదు.</string>
+    <string name="widget_custom_buttons_filter_all">అన్నీ</string>
     <string name="widget_custom_buttons_restriction">కస్టమ్ బటన్‌లు సక్రియంగా ఉన్నప్పుడు అందుబాటులో ఉండదు.</string>
     <string name="widget_custom_buttons_title">కస్టమ్ బటన్‌లు</string>
     <string name="widget_custom_buttons_widget_title">కస్టమ్ బటన్‌ల విడ్జెట్</string>

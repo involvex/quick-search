@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">Αρχείο</string>
     <string name="notification_pinned_item_type_note">Σημείωση</string>
     <string name="action_remove">Κατάργηση</string>
+    <string name="app_swipe_current_action">Τρέχουσα ενέργεια</string>
+    <string name="app_swipe_up_picker_title">Επιλογή ενέργειας σύρσης προς τα πάνω για %1$s</string>
+    <string name="app_swipe_down_picker_title">Επιλογή ενέργειας σύρσης προς τα κάτω για %1$s</string>
+    <string name="app_swipe_picker_tip">Σύροντας στο εικονίδιο της εφαρμογής θα ανοίγει το επιλεγμένο στοιχείο τόσο στις προτάσεις εφαρμογών όσο και στα αποτελέσματα αναζήτησης</string>
+    <string name="app_swipe_picker_search_hint">Αναζήτηση εφαρμογών, επαφών κ.λπ.</string>
+    <string name="app_swipe_up_set_toast">Η χειρονομία σύρσης προς τα πάνω ορίστηκε για %1$s</string>
+    <string name="app_swipe_down_set_toast">Η χειρονομία σύρσης προς τα κάτω ορίστηκε για %1$s</string>
     <string name="action_remove_from_history">Κατάργηση από το ιστορικό</string>
     <string name="action_reset_app_shortcut_icon">Επαναφορά προεπιλεγμένου εικονιδίου</string>
     <string name="action_retry">Δοκιμάστε ξανά</string>
@@ -939,9 +946,10 @@
     <string name="widget_background_color_custom_dialog_title">Προσαρμοσμένο χρώμα</string>
     <string name="widget_border_color">Χρώμα περιγράμματος</string>
     <string name="widget_custom_button_add_desc">Προσθήκη προσαρμοσμένου κουμπιού</string>
-    <string name="widget_custom_buttons_dialog_hint">Μπορείτε να αναζητήσετε Εφαρμογές, Συντομεύσεις, Επαφές, Αρχεία, Φακέλους, Σημειώσεις &amp; Ρυθμίσεις συσκευής.</string>
+    <string name="widget_custom_buttons_dialog_hint">Αναζητήστε Εφαρμογές, Συντομεύσεις, Επαφές, Αρχεία, Φακέλους, Σημειώσεις &amp; Ρυθμίσεις συσκευής.</string>
     <string name="widget_custom_buttons_dialog_title">Επιλογή ενέργειας</string>
     <string name="widget_custom_buttons_no_results">Δεν βρέθηκαν αποτελέσματα.</string>
+    <string name="widget_custom_buttons_filter_all">Όλα</string>
     <string name="widget_custom_buttons_restriction">Μη διαθέσιμο όταν τα προσαρμοσμένα κουμπιά είναι ενεργά.</string>
     <string name="widget_custom_buttons_title">Προσαρμοσμένα κουμπιά</string>
     <string name="widget_custom_buttons_widget_title">Widget προσαρμοσμένων κουμπιών</string>

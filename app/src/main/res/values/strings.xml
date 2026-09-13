@@ -128,6 +128,13 @@
     <string name="notification_pinned_item_type_file">File</string>
     <string name="notification_pinned_item_type_note">Note</string>
     <string name="action_remove">Remove</string>
+    <string name="app_swipe_current_action">Current Action</string>
+    <string name="app_swipe_up_picker_title">Select Swipe up action for %1$s</string>
+    <string name="app_swipe_down_picker_title">Select Swipe down action for %1$s</string>
+    <string name="app_swipe_picker_tip">Swiping on the app icon will open the selected item both in app suggestions and search results</string>
+    <string name="app_swipe_picker_search_hint">Search Apps, Contacts, etc.</string>
+    <string name="app_swipe_up_set_toast">Swipe Up Gesture has been Set for %1$s</string>
+    <string name="app_swipe_down_set_toast">Swipe Down Gesture has been Set for %1$s</string>
     <string name="action_remove_from_history">Remove From History</string>
     <string name="action_reset_app_shortcut_icon">Reset to default icon</string>
     <string name="action_retry">Retry</string>
@@ -940,9 +947,10 @@
     <string name="widget_custom_button_add_desc">Add custom button</string>
     <string name="widget_custom_button_change_colour">Change colour</string>
     <string name="widget_custom_button_choose_colour">Choose folder colour</string>
-    <string name="widget_custom_buttons_dialog_hint">You can search for Apps, App Shortcuts, Contacts, Files, Folders, Notes &amp; Device settings.</string>
+    <string name="widget_custom_buttons_dialog_hint">Search for Apps, App Shortcuts, Contacts, Files, Folders, Notes &amp; Device settings.</string>
     <string name="widget_custom_buttons_dialog_title">Select Action</string>
     <string name="widget_custom_buttons_no_results">No results found.</string>
+    <string name="widget_custom_buttons_filter_all">All</string>
     <string name="widget_custom_buttons_restriction">Not available when custom buttons are active.</string>
     <string name="widget_custom_buttons_title">Custom Buttons</string>
     <string name="widget_custom_buttons_widget_title">Custom Buttons Widget</string>

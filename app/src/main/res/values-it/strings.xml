@@ -131,6 +131,13 @@
     <string name="notification_pinned_item_type_file">File</string>
     <string name="notification_pinned_item_type_note">Nota</string>
     <string name="action_remove">Rimuovi</string>
+    <string name="app_swipe_current_action">Azione attuale</string>
+    <string name="app_swipe_up_picker_title">Seleziona l\'azione di scorrimento verso l\'alto per %1$s</string>
+    <string name="app_swipe_down_picker_title">Seleziona l\'azione di scorrimento verso il basso per %1$s</string>
+    <string name="app_swipe_picker_tip">Scorrendo sull\'icona dell\'app si aprirà l\'elemento selezionato sia nei suggerimenti delle app sia nei risultati di ricerca</string>
+    <string name="app_swipe_picker_search_hint">Cerca app, contatti ecc.</string>
+    <string name="app_swipe_up_set_toast">Gesto di scorrimento verso l\'alto impostato per %1$s</string>
+    <string name="app_swipe_down_set_toast">Gesto di scorrimento verso il basso impostato per %1$s</string>
     <string name="action_remove_from_history">Rimuovi dalla cronologia</string>
     <string name="action_reset_app_shortcut_icon">Ripristina icona predefinita</string>
     <string name="action_retry">Riprova</string>
@@ -938,9 +945,10 @@
     <string name="widget_background_color_custom_dialog_title">Colore personalizzato</string>
     <string name="widget_border_color">Colore bordo</string>
     <string name="widget_custom_button_add_desc">Aggiungi pulsante personalizzato</string>
-    <string name="widget_custom_buttons_dialog_hint">Puoi cercare app, scorciatoie app, contatti, file, cartelle, note e impostazioni del dispositivo.</string>
+    <string name="widget_custom_buttons_dialog_hint">Cerca app, scorciatoie app, contatti, file, cartelle, note e impostazioni del dispositivo.</string>
     <string name="widget_custom_buttons_dialog_title">Seleziona azione</string>
     <string name="widget_custom_buttons_no_results">Nessun risultato trovato.</string>
+    <string name="widget_custom_buttons_filter_all">Tutti</string>
     <string name="widget_custom_buttons_restriction">Non disponibile quando i pulsanti personalizzati sono attivi.</string>
     <string name="widget_custom_buttons_title">Pulsanti personalizzati</string>
     <string name="widget_custom_buttons_widget_title">Widget pulsanti personalizzati</string>

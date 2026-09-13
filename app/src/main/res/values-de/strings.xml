@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">Datei</string>
     <string name="notification_pinned_item_type_note">Notiz</string>
     <string name="action_remove">Entfernen</string>
+    <string name="app_swipe_current_action">Aktuelle Aktion</string>
+    <string name="app_swipe_up_picker_title">Aktion für Nach-oben-Wischen bei %1$s auswählen</string>
+    <string name="app_swipe_down_picker_title">Aktion für Nach-unten-Wischen bei %1$s auswählen</string>
+    <string name="app_swipe_picker_tip">Wischen auf dem App-Symbol öffnet das ausgewählte Element sowohl in den App-Vorschlägen als auch in den Suchergebnissen</string>
+    <string name="app_swipe_picker_search_hint">Apps, Kontakte usw. suchen</string>
+    <string name="app_swipe_up_set_toast">Nach-oben-Wischgeste für %1$s festgelegt</string>
+    <string name="app_swipe_down_set_toast">Nach-unten-Wischgeste für %1$s festgelegt</string>
     <string name="action_remove_from_history">Aus dem Verlauf entfernen</string>
     <string name="action_reset_app_shortcut_icon">Auf Standardsymbol zurücksetzen</string>
     <string name="action_retry">Erneut versuchen</string>
@@ -939,9 +946,10 @@
     <string name="widget_background_color_custom_dialog_title">Benutzerdefinierte Farbe</string>
     <string name="widget_border_color">Rahmenfarbe</string>
     <string name="widget_custom_button_add_desc">Benutzerdefinierte Schaltfläche hinzufügen</string>
-    <string name="widget_custom_buttons_dialog_hint">Du kannst nach Apps, App-Verknüpfungen, Kontakten, Dateien, Ordnern, Notizen &amp; Geräteeinstellungen suchen.</string>
+    <string name="widget_custom_buttons_dialog_hint">Suche nach Apps, App-Verknüpfungen, Kontakten, Dateien, Ordnern, Notizen &amp; Geräteeinstellungen.</string>
     <string name="widget_custom_buttons_dialog_title">Aktion auswählen</string>
     <string name="widget_custom_buttons_no_results">Keine Ergebnisse gefunden.</string>
+    <string name="widget_custom_buttons_filter_all">Alle</string>
     <string name="widget_custom_buttons_restriction">Nicht verfügbar, wenn benutzerdefinierte Schaltflächen aktiv sind.</string>
     <string name="widget_custom_buttons_title">Benutzerdefinierte Schaltflächen</string>
     <string name="widget_custom_buttons_widget_title">Widget mit benutzerdefinierten Schaltflächen</string>

@@ -132,6 +132,13 @@
     <string name="notification_pinned_item_type_file">Arquivo</string>
     <string name="notification_pinned_item_type_note">Nota</string>
     <string name="action_remove">Remover</string>
+    <string name="app_swipe_current_action">Ação atual</string>
+    <string name="app_swipe_up_picker_title">Selecionar ação de deslizar para cima para %1$s</string>
+    <string name="app_swipe_down_picker_title">Selecionar ação de deslizar para baixo para %1$s</string>
+    <string name="app_swipe_picker_tip">Deslizar no ícone do app abrirá o item selecionado tanto nas sugestões de apps quanto nos resultados da pesquisa</string>
+    <string name="app_swipe_picker_search_hint">Pesquisar apps, contatos etc.</string>
+    <string name="app_swipe_up_set_toast">Gesto de deslizar para cima definido para %1$s</string>
+    <string name="app_swipe_down_set_toast">Gesto de deslizar para baixo definido para %1$s</string>
     <string name="action_remove_from_history">Remover do histórico</string>
     <string name="action_reset_app_shortcut_icon">Restaurar ícone padrão</string>
     <string name="action_retry">Tentar novamente</string>
@@ -939,9 +946,10 @@
     <string name="widget_background_color_custom_dialog_title">Cor personalizada</string>
     <string name="widget_border_color">Cor da borda</string>
     <string name="widget_custom_button_add_desc">Adicionar botão personalizado</string>
-    <string name="widget_custom_buttons_dialog_hint">Você pode pesquisar por Apps, Atalhos de apps, Contatos, Arquivos, Pastas, Notas e Configurações do dispositivo.</string>
+    <string name="widget_custom_buttons_dialog_hint">Pesquise por Apps, Atalhos de apps, Contatos, Arquivos, Pastas, Notas e Configurações do dispositivo.</string>
     <string name="widget_custom_buttons_dialog_title">Selecionar ação</string>
     <string name="widget_custom_buttons_no_results">Nenhum resultado encontrado.</string>
+    <string name="widget_custom_buttons_filter_all">Tudo</string>
     <string name="widget_custom_buttons_restriction">Não disponível quando os botões personalizados estão ativos.</string>
     <string name="widget_custom_buttons_title">Botões personalizados</string>
     <string name="widget_custom_buttons_widget_title">Widget de botões personalizados</string>
