@@ -293,6 +293,8 @@
          ============================================================================ -->
     <string name="app_menu_section_actions">Actions</string>
     <string name="app_menu_section_shortcuts">Shortcuts</string>
+    <string name="app_menu_value_on">On</string>
+    <string name="action_uninstall_named">Uninstall %1$s</string>
     <string name="apps_refreshed_successfully">Apps refreshed successfully</string>
     <string name="error_loading_user_apps">We could not load your apps. Try again in a moment.</string>
     <string name="error_uninstall_app">Unable to uninstall %1$s</string>

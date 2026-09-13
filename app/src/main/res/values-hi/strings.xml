@@ -297,6 +297,8 @@
          ============================================================================ -->
     <string name="app_menu_section_actions">क्रियाएं</string>
     <string name="app_menu_section_shortcuts">शॉर्टकट्स</string>
+    <string name="app_menu_value_on">चालू</string>
+    <string name="action_uninstall_named">%1$s अनइंस्टॉल करें</string>
     <string name="apps_refreshed_successfully">ऐप्स सफलतापूर्वक रिफ्रेश हो गए</string>
     <string name="error_loading_user_apps">आपके ऐप्स लोड नहीं हो सके। थोड़ी देर बाद फिर कोशिश करें।</string>
     <string name="error_uninstall_app">%1$s अनइंस्टॉल नहीं हो सका</string>

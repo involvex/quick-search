@@ -297,6 +297,8 @@
          ============================================================================ -->
     <string name="app_menu_section_actions">Acciones</string>
     <string name="app_menu_section_shortcuts">Accesos directos</string>
+    <string name="app_menu_value_on">Activado</string>
+    <string name="action_uninstall_named">Desinstalar %1$s</string>
     <string name="apps_refreshed_successfully">Aplicaciones actualizadas con éxito</string>
     <string name="error_loading_user_apps">No pudimos cargar tus aplicaciones. Inténtalo de nuevo en un momento.</string>
     <string name="error_uninstall_app">No se pudo desinstalar %1$s</string>

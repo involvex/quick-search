@@ -296,6 +296,8 @@
      ============================================================================ -->
 <string name="app_menu_section_actions">İşlemler</string>
 <string name="app_menu_section_shortcuts">Kısayollar</string>
+<string name="app_menu_value_on">Açık</string>
+<string name="action_uninstall_named">%1$s uygulamasını kaldır</string>
 <string name="apps_refreshed_successfully">Uygulamalar başarıyla yenilendi</string>
 <string name="error_loading_user_apps">Uygulamalarınız yüklenemedi. Birazdan tekrar deneyin.</string>
 <string name="error_uninstall_app">%1$s kaldırılamadı</string>

@@ -297,6 +297,8 @@
          ============================================================================ -->
     <string name="app_menu_section_actions">Ações</string>
     <string name="app_menu_section_shortcuts">Atalhos</string>
+    <string name="app_menu_value_on">Ativado</string>
+    <string name="action_uninstall_named">Desinstalar %1$s</string>
     <string name="apps_refreshed_successfully">Apps atualizados com sucesso</string>
     <string name="error_loading_user_apps">Não foi possível carregar seus apps. Tente novamente em alguns instantes.</string>
     <string name="error_uninstall_app">Não foi possível desinstalar %1$s</string>

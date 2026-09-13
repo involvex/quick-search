@@ -296,6 +296,8 @@
          ============================================================================ -->
     <string name="app_menu_section_actions">Azioni</string>
     <string name="app_menu_section_shortcuts">Scorciatoie</string>
+    <string name="app_menu_value_on">Attivo</string>
+    <string name="action_uninstall_named">Disinstalla %1$s</string>
     <string name="apps_refreshed_successfully">App aggiornate con successo</string>
     <string name="error_loading_user_apps">Impossibile caricare le tue app. Riprova tra un momento.</string>
     <string name="error_uninstall_app">Impossibile disinstallare %1$s</string>

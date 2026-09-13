@@ -82,6 +82,7 @@ fun AppBottomPopup(
     innerCardHeight: Dp? = null,
     drawerHeight: Dp? = null,
     contentSpacing: Dp = 24.dp,
+    headerSpacing: Dp = 16.dp,
     contentScrollable: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -155,7 +156,7 @@ fun AppBottomPopup(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(headerSpacing),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         if (leadingContent != null) {

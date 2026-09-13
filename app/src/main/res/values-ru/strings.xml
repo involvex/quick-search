@@ -297,6 +297,8 @@
      ============================================================================ -->
 <string name="app_menu_section_actions">Действия</string>
 <string name="app_menu_section_shortcuts">Ярлыки</string>
+<string name="app_menu_value_on">Вкл.</string>
+<string name="action_uninstall_named">Удалить %1$s</string>
 <string name="apps_refreshed_successfully">Список приложений успешно обновлен</string>
 <string name="error_loading_user_apps">Не удалось загрузить ваши приложения. Повторите попытку позже.</string>
 <string name="error_uninstall_app">Не удалось удалить %1$s</string>

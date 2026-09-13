@@ -297,6 +297,8 @@
          ============================================================================ -->
     <string name="app_menu_section_actions">Aktionen</string>
     <string name="app_menu_section_shortcuts">Verknüpfungen</string>
+    <string name="app_menu_value_on">An</string>
+    <string name="action_uninstall_named">%1$s deinstallieren</string>
     <string name="apps_refreshed_successfully">Apps erfolgreich aktualisiert</string>
     <string name="error_loading_user_apps">Deine Apps konnten nicht geladen werden. Bitte versuche es gleich noch einmal.</string>
     <string name="error_uninstall_app">%1$s konnte nicht deinstalliert werden</string>
