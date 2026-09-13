@@ -218,6 +218,8 @@ internal fun ContactResultRow(
                         ContactDropdownMenu(
                                 expanded = showOptions,
                                 onDismissRequest = { showOptions = false },
+                                displayName = contactInfo.displayName,
+                                photoUri = contactInfo.photoUri,
                                 isPinned = isPinned,
                                 hasNickname = hasNickname,
                                 hasTrigger = hasTrigger,

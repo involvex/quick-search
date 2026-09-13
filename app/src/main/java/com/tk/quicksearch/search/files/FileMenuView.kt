@@ -21,6 +21,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PinEnd
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.VideoLibrary
 import androidx.compose.material.icons.rounded.VisibilityOff
@@ -29,6 +30,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.tk.quicksearch.R
 import com.tk.quicksearch.pinnedNotifications.PinnedNotifications
+import com.tk.quicksearch.search.appSettings.AppSettingsDestination
+import com.tk.quicksearch.search.appSettings.LocalOpenAppSettingDestination
 import com.tk.quicksearch.search.models.DeviceFile
 import com.tk.quicksearch.search.utils.FileUtils
 import com.tk.quicksearch.shared.ui.components.ItemMenuPopup
@@ -182,11 +186,12 @@ fun FileDropdownMenu(
             relativePath = deviceFile.relativePath, volumeName = deviceFile.volumeName,
     )
     val isPinnedToNotifications = PinnedNotifications.isPinned(context, notificationAction)
+    val openAppSettingDestination = LocalOpenAppSettingDestination.current
     val menuItems = buildList {
         if (showPinnedItemMenu && isPinned) {
             add(FileMenuItem(
                     textResId = R.string.action_unpin_app,
-                    icon = { Icon(painter = painterResource(R.drawable.ic_unpin), contentDescription = null) },
+                    icon = { Icon(painter = painterResource(R.drawable.ic_unpin), contentDescription = null, tint = AppColors.ItemMenuActiveIconTint) },
                     onClick = { onDismissRequest(); onTogglePin() },
             ))
             if (!deviceFile.isDirectory) {
@@ -227,26 +232,25 @@ fun FileDropdownMenu(
                     Icon(
                             painter = painterResource(if (isPinned) R.drawable.ic_unpin else R.drawable.ic_pin),
                             contentDescription = null,
+                            tint = if (isPinned) AppColors.ItemMenuActiveIconTint else LocalContentColor.current,
                     )
                 },
                 onClick = { onDismissRequest(); onTogglePin() },
         ))
         add(FileMenuItem(
-                textResId = if (hasTrigger) R.string.action_edit_trigger else R.string.action_add_trigger,
-                icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null) },
+                textResId = R.string.action_add_trigger,
+                icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (hasTrigger) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                 onClick = { onDismissRequest(); onTriggerClick() },
         ))
-        if (!deviceFile.isDirectory) {
-            add(FileMenuItem(
-                    textResId = R.string.action_file_info,
-                    icon = { Icon(imageVector = Icons.Rounded.Info, contentDescription = null) },
-                    onClick = { onDismissRequest(); onFileInfoClick() },
-            ))
-        }
+        add(FileMenuItem(
+                textResId = R.string.action_exclude_generic,
+                icon = { Icon(imageVector = Icons.Rounded.VisibilityOff, contentDescription = null) },
+                onClick = { onDismissRequest(); onExclude() },
+        ))
 
         add(FileMenuItem(
-                textResId = if (hasNickname) R.string.action_edit_nickname else R.string.common_nickname,
-                icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null) },
+                textResId = R.string.common_nickname,
+                icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (hasNickname) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                 onClick = { onDismissRequest(); onNicknameClick() },
                 group = FileMenuGroup.ROWS,
         ))
@@ -262,7 +266,7 @@ fun FileDropdownMenu(
                 textResId = if (isPinnedToNotifications) R.string.action_unpin_from_notifications else R.string.action_pin_to_notifications,
                 icon = {
                     if (isPinnedToNotifications) {
-                        Icon(painter = painterResource(R.drawable.ic_unpin), contentDescription = null)
+                        Icon(painter = painterResource(R.drawable.ic_unpin), contentDescription = null, tint = AppColors.ItemMenuActiveIconTint)
                     } else {
                         Icon(imageVector = Icons.Rounded.PinEnd, contentDescription = null)
                     }
@@ -282,18 +286,28 @@ fun FileDropdownMenu(
                 onClick = { onDismissRequest(); onAddToHome() },
                 group = FileMenuGroup.ROWS,
         ))
-        add(FileMenuItem(
-                textResId = R.string.action_exclude_generic,
-                icon = { Icon(imageVector = Icons.Rounded.VisibilityOff, contentDescription = null) },
-                onClick = { onDismissRequest(); onExclude() },
-                group = FileMenuGroup.ROWS,
-        ))
+        if (!deviceFile.isDirectory) {
+            add(FileMenuItem(
+                    textResId = R.string.action_file_info,
+                    icon = { Icon(imageVector = Icons.Rounded.Info, contentDescription = null) },
+                    onClick = { onDismissRequest(); onFileInfoClick() },
+                    group = FileMenuGroup.ROWS,
+            ))
+        }
         if (fileExtension != null) {
             add(FileMenuItem(
                     textResId = R.string.action_exclude_extension,
                     textArg = fileExtension,
                     icon = { Icon(imageVector = Icons.Rounded.VisibilityOff, contentDescription = null) },
                     onClick = { onDismissRequest(); onExcludeExtension() },
+                    group = FileMenuGroup.ROWS,
+            ))
+        }
+        openAppSettingDestination?.let { openDestination ->
+            add(FileMenuItem(
+                    textResId = R.string.action_files_settings,
+                    icon = { Icon(imageVector = Icons.Rounded.Settings, contentDescription = null) },
+                    onClick = { onDismissRequest(); openDestination(AppSettingsDestination.FILES) },
                     group = FileMenuGroup.ROWS,
             ))
         }
@@ -355,14 +369,14 @@ fun FileDropdownMenu(
                     Icon(
                             imageVector = fileIcon,
                             contentDescription = null,
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier.size(32.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 },
                 title = {
                     Text(
                             text = deviceFile.displayName,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 2,

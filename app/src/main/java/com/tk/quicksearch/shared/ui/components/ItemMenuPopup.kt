@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
@@ -39,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +60,8 @@ data class ItemMenuTile(
     val onClick: () -> Unit,
     val onLongClick: (() -> Unit)? = null,
     val enableMarquee: Boolean = false,
+    /** Content anchored to the tile, such as a small dropdown shown on long press. */
+    val anchoredContent: (@Composable () -> Unit)? = null,
 )
 
 /**
@@ -75,8 +79,15 @@ data class ItemMenuRow(
     val longHoldDurationMillis: Long = 0L,
     val trailingText: String? = null,
     val destructive: Boolean = false,
+    /** Scrolls a label that doesn't fit instead of ellipsizing it. List rows only. */
+    val enableMarquee: Boolean = false,
     /** Content anchored to a side-by-side button, such as a small dropdown shown on long press. */
     val anchoredContent: (@Composable () -> Unit)? = null,
+    /**
+     * Side-by-side buttons only: shows just the icon in a compact square box, with [label] used as
+     * its accessibility description.
+     */
+    val iconOnly: Boolean = false,
 )
 
 private const val ItemMenuGridColumns = 4
@@ -115,6 +126,8 @@ fun ItemMenuPopup(
         contentTopPadding = 0.dp,
         // The popup's own bottom padding already separates the last item from the edge.
         contentBottomPadding = 0.dp,
+        // Lets the tiles and rows use more of the popup's width.
+        contentHorizontalPadding = 4.dp,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             val showGridTitles = shortcuts.isNotEmpty() && actions.isNotEmpty()
@@ -191,58 +204,65 @@ private fun ItemMenuTileButton(
     modifier: Modifier = Modifier,
 ) {
     val view = LocalView.current
-    Column(
-        modifier = modifier
-            .clip(DesignTokens.ShapeSmall)
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f))
-            .combinedClickable(
-                onClick = tile.onClick,
-                onLongClick = tile.onLongClick?.let { onLongClick ->
-                    {
-                        hapticConfirm(view)()
-                        onLongClick()
-                    }
-                },
-            )
-            .padding(vertical = DesignTokens.SpacingMedium, horizontal = DesignTokens.SpacingXSmall),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        Box(modifier = Modifier.size(24.dp), contentAlignment = Alignment.Center) {
-            CompositionLocalProvider(LocalContentColor provides AppColors.DialogText) {
-                tile.icon()
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(DesignTokens.ShapeSmall)
+                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f))
+                .combinedClickable(
+                    onClick = tile.onClick,
+                    onLongClick = tile.onLongClick?.let { onLongClick ->
+                        {
+                            hapticConfirm(view)()
+                            onLongClick()
+                        }
+                    },
+                )
+                .padding(vertical = DesignTokens.SpacingMedium, horizontal = DesignTokens.SpacingXSmall),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Box(modifier = Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+                CompositionLocalProvider(LocalContentColor provides AppColors.DialogText) {
+                    tile.icon()
+                }
+            }
+            val labelStyle = MaterialTheme.typography.labelMedium
+            if (tile.enableMarquee) {
+                Text(
+                    text = tile.label,
+                    style = labelStyle,
+                    color = AppColors.DialogText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Clip,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.basicMarquee(),
+                )
+            } else {
+                // Shrinks slightly so labels like "SpeedBump" fit a narrow tile before ellipsizing.
+                // The box keeps the full-size line height so a shrunk label doesn't make the tile shorter.
+                Box(
+                    modifier = Modifier.height(with(LocalDensity.current) { labelStyle.lineHeight.toDp() }),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    BasicText(
+                        text = tile.label,
+                        style = labelStyle.copy(color = AppColors.DialogText, textAlign = TextAlign.Center),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        autoSize = TextAutoSize.StepBased(
+                            minFontSize = 9.sp,
+                            maxFontSize = labelStyle.fontSize,
+                            stepSize = 0.5.sp,
+                        ),
+                    )
+                }
             }
         }
-        val labelStyle = MaterialTheme.typography.labelMedium
-        if (tile.enableMarquee) {
-            Text(
-                text = tile.label,
-                style = labelStyle,
-                color = AppColors.DialogText,
-                maxLines = 1,
-                overflow = TextOverflow.Clip,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.basicMarquee(),
-            )
-        } else {
-            // Shrinks slightly so labels like "SpeedBump" fit a narrow tile before ellipsizing.
-            // The box keeps the full-size line height so a shrunk label doesn't make the tile shorter.
-            Box(
-                modifier = Modifier.height(with(LocalDensity.current) { labelStyle.lineHeight.toDp() }),
-                contentAlignment = Alignment.Center,
-            ) {
-                BasicText(
-                    text = tile.label,
-                    style = labelStyle.copy(color = AppColors.DialogText, textAlign = TextAlign.Center),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    autoSize = TextAutoSize.StepBased(
-                        minFontSize = 9.sp,
-                        maxFontSize = labelStyle.fontSize,
-                        stepSize = 0.5.sp,
-                    ),
-                )
-            }
+        tile.anchoredContent?.let { content ->
+            // Matches the tile's bounds so anchored popups position against it.
+            Box(modifier = Modifier.matchParentSize()) { content() }
         }
     }
 }
@@ -281,8 +301,10 @@ private fun ItemMenuListRow(row: ItemMenuRow) {
             style = MaterialTheme.typography.bodyLarge,
             color = contentColor,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f),
+            overflow = if (row.enableMarquee) TextOverflow.Clip else TextOverflow.Ellipsis,
+            modifier = Modifier
+                .weight(1f)
+                .then(if (row.enableMarquee) Modifier.basicMarquee() else Modifier),
         )
         row.trailingText?.let { value ->
             Text(
@@ -311,7 +333,10 @@ private fun ItemMenuButtonRow(buttons: List<ItemMenuRow>) {
         horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall),
     ) {
         buttons.forEach { button ->
-            ItemMenuButton(button = button, modifier = Modifier.weight(1f))
+            ItemMenuButton(
+                button = button,
+                modifier = if (button.iconOnly) Modifier.width(56.dp) else Modifier.weight(1f),
+            )
         }
     }
 }
@@ -388,6 +413,7 @@ private fun ItemMenuButton(
                 .clip(DesignTokens.ShapeSmall)
                 .background(containerColor)
                 .then(clickModifier)
+                .then(if (button.iconOnly) Modifier.semantics { contentDescription = button.label } else Modifier)
                 .padding(horizontal = DesignTokens.SpacingMedium, vertical = DesignTokens.SpacingSmall),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall, Alignment.CenterHorizontally),
@@ -397,14 +423,16 @@ private fun ItemMenuButton(
                     button.icon()
                 }
             }
-            Text(
-                text = button.label,
-                style = MaterialTheme.typography.labelLarge,
-                color = contentColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f, fill = false),
-            )
+            if (!button.iconOnly) {
+                Text(
+                    text = button.label,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+            }
         }
         button.anchoredContent?.let { content ->
             // Matches the button's bounds so anchored popups position and size against it.
