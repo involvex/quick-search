@@ -44,6 +44,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.tk.quicksearch.R
 import com.tk.quicksearch.app.UpdateHelper
+import com.tk.quicksearch.search.core.AccentColorMode
+import com.tk.quicksearch.search.core.BackgroundSource
 import com.tk.quicksearch.search.core.SearchSection
 import com.tk.quicksearch.search.core.SearchUiState
 import com.tk.quicksearch.search.core.SearchViewModel
@@ -1072,6 +1074,15 @@ fun SearchRoute(
             onSavePrimaryContactCardAction = viewModel::setPrimaryContactCardAction,
             onSaveSecondaryContactCardAction = viewModel::setSecondaryContactCardAction,
             onWallpaperLoaded = onWallpaperLoaded,
+            onWallpaperUnavailable = {
+                viewModel.setWallpaperAvailable(false)
+                if (
+                    viewModel.uiState.value.backgroundSource == BackgroundSource.SYSTEM_WALLPAPER &&
+                    viewModel.uiState.value.accentColorMode == AccentColorMode.FROM_WALLPAPER
+                ) {
+                    viewModel.setAccentColorMode(AccentColorMode.NONE)
+                }
+            },
             onSystemWallpaperChanged = viewModel::resetHomeTextColorForNewWallpaper,
             isOverlayPresentation = isOverlayPresentation,
             onOverlayExpandRequest = onOverlayExpandRequest,

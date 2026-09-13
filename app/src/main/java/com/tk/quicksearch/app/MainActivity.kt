@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tk.quicksearch.app.navigation.MainContent
@@ -311,7 +312,18 @@ open class MainActivity : FragmentActivity() {
                     modifier =
                         Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background),
+                            .background(
+                                if (
+                                    this@MainActivity is HomeActivity &&
+                                    this@MainActivity.canShowSystemWallpaperBackdrop &&
+                                    uiState.backgroundSource ==
+                                        com.tk.quicksearch.search.core.BackgroundSource.SYSTEM_WALLPAPER
+                                ) {
+                                    Color.Transparent
+                                } else {
+                                    MaterialTheme.colorScheme.background
+                                },
+                            ),
                 ) {
                     LaunchedEffect(Unit) {
                         if (!hasSearchSurfaceComposeTraced) {
@@ -388,6 +400,11 @@ open class MainActivity : FragmentActivity() {
                         userPreferences = userPreferences,
                         searchViewModel = searchViewModel,
                         isFirstLaunch = isFirstLaunchAtActivityStart,
+                        allowSystemWallpaperBackdrop =
+                            this@MainActivity is HomeActivity &&
+                                this@MainActivity.canShowSystemWallpaperBackdrop &&
+                                uiState.backgroundSource ==
+                                    com.tk.quicksearch.search.core.BackgroundSource.SYSTEM_WALLPAPER,
                         onSearchBackPressed = ::handleSearchBackPressed,
                         navigationRequest = navigationRequest.value,
                         onNavigationRequestHandled = { navigationRequest.value = null },
