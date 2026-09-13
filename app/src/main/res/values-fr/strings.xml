@@ -356,6 +356,8 @@
 <string name="error_shortcut_no_activity_resolves">Aucune activité ne résout l\'intent.</string>
 <string name="error_shortcut_requires_permission">Le raccourci nécessite l\'autorisation : %1$s.</string>
 <string name="error_shortcuts_not_supported">L\'ajout de raccourcis sur l\'écran d\'accueil n\'est pas pris en charge sur cet appareil</string>
+<string name="pin_shortcut_request_added">\"%1$s\" ajouté à Quick Search</string>
+<string name="pin_shortcut_request_added_generic">Raccourci ajouté à Quick Search</string>
 <string name="settings_app_shortcuts_activity_dialog_title">Choisir l\'activité de l\'application</string>
 <string name="settings_app_shortcuts_activity_empty">Aucune activité d\'application disponible.</string>
 <string name="settings_app_shortcuts_activity_warning">Certaines activités peuvent ne pas fonctionner comme prévu</string>

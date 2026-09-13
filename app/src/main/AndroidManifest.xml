@@ -335,6 +335,20 @@
             android:noHistory="true"
             android:theme="@style/Theme.QuickSearch" />
 
+        <!-- Accepts pin-shortcut requests from other apps while Quick Search is
+             the default launcher (ShortcutManager.requestPinShortcut). -->
+        <activity
+            android:name=".app.PinShortcutRequestActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.QuickSearch">
+            <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
+            </intent-filter>
+        </activity>
+
         <!-- Widget Activities -->
         <activity
             android:name=".widgets.searchWidget.SearchWidgetConfigureActivity"

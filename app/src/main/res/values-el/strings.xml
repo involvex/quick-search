@@ -356,6 +356,8 @@
     <string name="error_shortcut_no_activity_resolves">Καμία δραστηριότητα δεν επιλύει το intent.</string>
     <string name="error_shortcut_requires_permission">Η συντόμευση απαιτεί άδεια: %1$s.</string>
     <string name="error_shortcuts_not_supported">Η προσθήκη συντομεύσεων στην αρχική οθόνη δεν υποστηρίζεται σε αυτή τη συσκευή</string>
+    <string name="pin_shortcut_request_added">Το \"%1$s\" προστέθηκε στο Quick Search</string>
+    <string name="pin_shortcut_request_added_generic">Η συντόμευση προστέθηκε στο Quick Search</string>
     <string name="settings_app_shortcuts_activity_dialog_title">Επιλογή δραστηριότητας εφαρμογής</string>
     <string name="settings_app_shortcuts_activity_empty">Δεν υπάρχουν διαθέσιμες δραστηριότητες εφαρμογής.</string>
     <string name="settings_app_shortcuts_activity_warning">Ορισμένες δραστηριότητες ενδέχεται να μην λειτουργούν όπως αναμένεται</string>

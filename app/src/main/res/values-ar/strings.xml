@@ -357,6 +357,8 @@
     <string name="error_shortcut_no_activity_resolves">لا يوجد نشاط تطبيق يمكنه معالجة هذا الإجراء.</string>
     <string name="error_shortcut_requires_permission">يتطلب الاختصار إذنًا: %1$s.</string>
     <string name="error_shortcuts_not_supported">إضافة اختصارات إلى الشاشة الرئيسية غير مدعومة على هذا الجهاز</string>
+    <string name="pin_shortcut_request_added">تمت إضافة \"%1$s\" إلى Quick Search</string>
+    <string name="pin_shortcut_request_added_generic">تمت إضافة الاختصار إلى Quick Search</string>
     <string name="settings_app_shortcuts_activity_dialog_title">اختر نشاطاً من التطبيق</string>
     <string name="settings_app_shortcuts_activity_empty">لا تتوفر أنشطة لهذا التطبيق.</string>
     <string name="settings_app_shortcuts_activity_warning">قد لا تعمل بعض الأنشطة كما هو متوقع</string>

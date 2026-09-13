@@ -356,6 +356,8 @@
     <string name="error_shortcut_no_activity_resolves">Ninguna actividad resuelve el intent.</string>
     <string name="error_shortcut_requires_permission">El acceso directo requiere el permiso: %1$s.</string>
     <string name="error_shortcuts_not_supported">Añadir accesos directos a la pantalla de inicio no es compatible con este dispositivo</string>
+    <string name="pin_shortcut_request_added">Se añadió \"%1$s\" a Quick Search</string>
+    <string name="pin_shortcut_request_added_generic">Acceso directo añadido a Quick Search</string>
     <string name="settings_app_shortcuts_activity_dialog_title">Elegir actividad de la app</string>
     <string name="settings_app_shortcuts_activity_empty">No hay actividades disponibles para esta app.</string>
     <string name="settings_app_shortcuts_activity_warning">Es posible que algunas actividades no funcionen como se espera</string>

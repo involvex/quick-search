@@ -356,6 +356,8 @@
     <string name="error_shortcut_no_activity_resolves">ఇంటెంట్‌ను పరిష్కరించే యాక్టివిటీ ఏదీ లేదు.</string>
     <string name="error_shortcut_requires_permission">షార్ట్‌కట్‌కు అనుమతి అవసరం: %1$s.</string>
     <string name="error_shortcuts_not_supported">ఈ పరికరంలో హోమ్ స్క్రీన్‌కు షార్ట్‌కట్‌లను జోడించడానికి మద్దతు లేదు</string>
+    <string name="pin_shortcut_request_added">\"%1$s\" Quick Searchకు జోడించబడింది</string>
+    <string name="pin_shortcut_request_added_generic">షార్ట్‌కట్ Quick Searchకు జోడించబడింది</string>
     <string name="settings_app_shortcuts_activity_dialog_title">యాప్ యాక్టివిటీని ఎంచుకోండి</string>
     <string name="settings_app_shortcuts_activity_empty">యాప్ యాక్టివిటీలు ఏవీ అందుబాటులో లేవు.</string>
     <string name="settings_app_shortcuts_activity_warning">కొన్ని యాక్టివిటీలు ఆశించిన విధంగా పని చేయకపోవచ్చు</string>

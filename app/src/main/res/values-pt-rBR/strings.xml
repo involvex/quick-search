@@ -356,6 +356,8 @@
     <string name="error_shortcut_no_activity_resolves">Nenhuma atividade resolve a intent.</string>
     <string name="error_shortcut_requires_permission">O atalho requer permissão: %1$s.</string>
     <string name="error_shortcuts_not_supported">A adição de atalhos à tela inicial não é suportada neste dispositivo</string>
+    <string name="pin_shortcut_request_added">\"%1$s\" adicionado ao Quick Search</string>
+    <string name="pin_shortcut_request_added_generic">Atalho adicionado ao Quick Search</string>
     <string name="settings_app_shortcuts_activity_dialog_title">Escolha a atividade do app</string>
     <string name="settings_app_shortcuts_activity_empty">Nenhuma atividade de app disponível.</string>
     <string name="settings_app_shortcuts_activity_warning">Algumas atividades podem não funcionar como esperado</string>

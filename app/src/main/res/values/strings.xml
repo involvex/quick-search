@@ -352,6 +352,8 @@
     <string name="error_shortcut_no_activity_resolves">No activity resolves intent.</string>
     <string name="error_shortcut_requires_permission">Shortcut requires permission: %1$s.</string>
     <string name="error_shortcuts_not_supported">Adding shortcuts to home screen is not supported on this device</string>
+    <string name="pin_shortcut_request_added">Added \"%1$s\" to Quick Search</string>
+    <string name="pin_shortcut_request_added_generic">Shortcut added to Quick Search</string>
     <string name="settings_app_shortcuts_activity_dialog_title">Choose App Activity</string>
     <string name="settings_app_shortcuts_activity_empty">No app activities available.</string>
     <string name="settings_app_shortcuts_activity_warning">Some activities may not work as expected</string>

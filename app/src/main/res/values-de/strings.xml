@@ -356,6 +356,8 @@
     <string name="error_shortcut_no_activity_resolves">Keine Aktivität löst den Intent auf.</string>
     <string name="error_shortcut_requires_permission">Verknüpfung erfordert Berechtigung: %1$s.</string>
     <string name="error_shortcuts_not_supported">Das Hinzufügen von Verknüpfungen zum Startbildschirm wird auf diesem Gerät nicht unterstützt</string>
+    <string name="pin_shortcut_request_added">\"%1$s\" zu Quick Search hinzugefügt</string>
+    <string name="pin_shortcut_request_added_generic">Verknüpfung zu Quick Search hinzugefügt</string>
     <string name="settings_app_shortcuts_activity_dialog_title">App-Aktivität auswählen</string>
     <string name="settings_app_shortcuts_activity_empty">Keine App-Aktivitäten verfügbar.</string>
     <string name="settings_app_shortcuts_activity_warning">Einige Aktivitäten funktionieren möglicherweise nicht wie erwartet</string>
