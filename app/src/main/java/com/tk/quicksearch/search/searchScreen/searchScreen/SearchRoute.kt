@@ -2,9 +2,11 @@ package com.tk.quicksearch.search.searchScreen
 
 import android.Manifest
 import android.app.Activity
+import android.app.KeyguardManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -71,6 +73,7 @@ import com.tk.quicksearch.overlay.OverlayModeController
 import com.tk.quicksearch.search.apps.notificationDots.rememberNotificationDotsCheckedChange
 import com.tk.quicksearch.search.apps.appLock.AppLock
 import com.tk.quicksearch.search.apps.appLock.LocalAppLockAuthenticator
+import com.tk.quicksearch.search.apps.appLock.LocalAppLockCredentialAuthenticator
 import com.tk.quicksearch.search.apps.speedBump.SpeedBump
 import com.tk.quicksearch.search.apps.swipeGestures.AppSwipeGestures
 import com.tk.quicksearch.search.apps.speedBump.SpeedBumpOverlay
@@ -541,6 +544,13 @@ fun SearchRoute(
     }
     var isDefaultLauncher by remember { mutableStateOf(context.cachedDefaultHomeAppStatus()) }
     var pendingBiometricAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+    var pendingDeviceCredentialAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val deviceCredentialLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val action = pendingDeviceCredentialAction
+            pendingDeviceCredentialAction = null
+            if (result.resultCode == Activity.RESULT_OK) action?.invoke()
+        }
     val fragmentActivity = context as? FragmentActivity
     val biometricPrompt = remember(fragmentActivity) {
         fragmentActivity?.let { activity ->
@@ -576,6 +586,32 @@ fun SearchRoute(
             }
         }
     }
+    val requestDeviceCredentialAuthentication =
+        remember(biometricPrompt, context, deviceCredentialLauncher) {
+            { promptTitle: String, onAuthenticated: () -> Unit ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    biometricPrompt?.let { prompt ->
+                        pendingBiometricAction = onAuthenticated
+                        prompt.authenticate(
+                            BiometricPrompt.PromptInfo.Builder()
+                                .setTitle(promptTitle)
+                                .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                                .build(),
+                        )
+                    }
+                } else {
+                    val keyguardManager = context.getSystemService(KeyguardManager::class.java)
+                    @Suppress("DEPRECATION")
+                    val credentialIntent =
+                        keyguardManager?.createConfirmDeviceCredentialIntent(promptTitle, null)
+                    if (credentialIntent != null) {
+                        pendingDeviceCredentialAction = onAuthenticated
+                        deviceCredentialLauncher.launch(credentialIntent)
+                    }
+                }
+                Unit
+            }
+        }
     fun runAfterAppUnlock(
         packageName: String,
         appName: String,
@@ -766,6 +802,7 @@ fun SearchRoute(
         CompositionLocalProvider(
             LocalHomeHorizontalSwipeHandler provides handleHomeHorizontalSwipe,
             LocalAppLockAuthenticator provides requestBiometricAuthentication,
+            LocalAppLockCredentialAuthenticator provides requestDeviceCredentialAuthentication,
         ) {
             SearchScreenComposable(
                 modifier =

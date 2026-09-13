@@ -69,6 +69,7 @@ import com.tk.quicksearch.search.apps.speedBump.SpeedBump
 import com.tk.quicksearch.search.apps.speedBump.SpeedBumpExplainerDialog
 import com.tk.quicksearch.search.apps.appLock.AppLock
 import com.tk.quicksearch.search.apps.appLock.LocalAppLockAuthenticator
+import com.tk.quicksearch.search.apps.appLock.LocalAppLockCredentialAuthenticator
 import com.tk.quicksearch.search.apps.swipeGestures.AppSwipeDirection
 import com.tk.quicksearch.search.apps.swipeGestures.AppSwipeGestures
 import com.tk.quicksearch.search.apps.swipeGestures.rememberAppSwipeActions
@@ -84,6 +85,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private val ShortcutGridIconSize = 24.dp
+private const val AppUnlockCredentialHoldMillis = 6_000L
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,6 +143,7 @@ fun AppItemDropdownMenu(
     }
     val isDefaultLauncher = context.cachedDefaultHomeAppStatus()
     val authenticate = LocalAppLockAuthenticator.current
+    val authenticateWithDeviceCredential = LocalAppLockCredentialAuthenticator.current
     // Non-null while the explainer is up; true when it followed the user first turning it on.
     var speedBumpExplainerJustEnabled by remember { mutableStateOf<Boolean?>(null) }
     val isOtherLaunchableApp = !isCurrentApp && isLaunchableApp
@@ -230,6 +233,18 @@ fun AppItemDropdownMenu(
                         appLockEnabled = newLockState
                     }
                 },
+                onLongHold =
+                    if (appLockEnabled) {
+                        {
+                            authenticateWithDeviceCredential(lockPromptTitle) {
+                                AppLock.setLocked(context, appInfo.packageName, false)
+                                appLockEnabled = false
+                            }
+                        }
+                    } else {
+                        null
+                    },
+                longHoldDurationMillis = AppUnlockCredentialHoldMillis,
             )
         } else {
             null

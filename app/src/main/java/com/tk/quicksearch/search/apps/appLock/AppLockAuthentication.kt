@@ -6,3 +6,5 @@ import androidx.compose.runtime.staticCompositionLocalOf
 typealias AppLockAuthenticator = (promptTitle: String, onAuthenticated: () -> Unit) -> Unit
 
 val LocalAppLockAuthenticator = staticCompositionLocalOf<AppLockAuthenticator> { { _, _ -> } }
+
+val LocalAppLockCredentialAuthenticator = staticCompositionLocalOf<AppLockAuthenticator> { { _, _ -> } }
