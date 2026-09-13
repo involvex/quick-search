@@ -46,6 +46,8 @@ import com.tk.quicksearch.R
 import com.tk.quicksearch.app.UpdateHelper
 import com.tk.quicksearch.search.core.AccentColorMode
 import com.tk.quicksearch.search.core.BackgroundSource
+import com.tk.quicksearch.search.core.ItemCustomizationRemover
+import com.tk.quicksearch.search.core.LocalItemCustomizationRemover
 import com.tk.quicksearch.search.core.SearchSection
 import com.tk.quicksearch.search.core.SearchUiState
 import com.tk.quicksearch.search.core.SearchViewModel
@@ -822,9 +824,23 @@ fun SearchRoute(
         }
     }
 
+    val itemCustomizationRemover = remember(viewModel) {
+        ItemCustomizationRemover(
+            removeAppNickname = { viewModel.setAppNickname(it, null) },
+            removeAppTrigger = { viewModel.setAppTrigger(it, null) },
+            removeAppShortcutNickname = { viewModel.setAppShortcutNickname(it, null) },
+            removeAppShortcutTrigger = { viewModel.setAppShortcutTrigger(it, null) },
+            removeContactNickname = { viewModel.setContactNickname(it, null) },
+            removeContactTrigger = { viewModel.setContactTrigger(it, null) },
+            removeFileNickname = { viewModel.setFileNickname(it, null) },
+            removeFileTrigger = { viewModel.setFileTrigger(it, null) },
+        )
+    }
+
     Box(modifier = containerModifier) {
         CompositionLocalProvider(
             LocalHomeHorizontalSwipeHandler provides handleHomeHorizontalSwipe,
+            LocalItemCustomizationRemover provides itemCustomizationRemover,
             LocalAppLockAuthenticator provides requestBiometricAuthentication,
             LocalAppLockCredentialAuthenticator provides requestDeviceCredentialAuthentication,
             LocalOpenAppSettingDestination provides onOpenAppSettingDestination,

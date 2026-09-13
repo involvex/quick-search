@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.tk.quicksearch.R
 import com.tk.quicksearch.search.core.AppIconShape
+import com.tk.quicksearch.search.core.LocalItemCustomizationRemover
 import com.tk.quicksearch.search.appSettings.AppSettingsDestination
 import com.tk.quicksearch.search.appSettings.LocalOpenAppSettingDestination
 import com.tk.quicksearch.search.data.AppShortcutRepository.StaticShortcut
@@ -68,7 +69,6 @@ import com.tk.quicksearch.search.data.TodayAppUsage
 import com.tk.quicksearch.search.data.UserAppPreferences
 import com.tk.quicksearch.search.data.AppShortcutRepository.rememberShortcutIcon
 import com.tk.quicksearch.search.data.AppShortcutRepository.shortcutDisplayName
-import com.tk.quicksearch.search.data.AppShortcutRepository.shortcutKey
 import com.tk.quicksearch.search.models.AppInfo
 import com.tk.quicksearch.pinnedNotifications.PinnedNotifications
 import com.tk.quicksearch.search.apps.speedBump.SpeedBump
@@ -79,9 +79,11 @@ import com.tk.quicksearch.search.apps.appLock.LocalAppLockCredentialAuthenticato
 import com.tk.quicksearch.search.apps.swipeGestures.AppSwipeDirection
 import com.tk.quicksearch.search.apps.swipeGestures.AppSwipeGestures
 import com.tk.quicksearch.search.apps.swipeGestures.rememberAppSwipeActions
+import com.tk.quicksearch.shared.ui.components.ItemMenuLongPressOption
 import com.tk.quicksearch.shared.ui.components.ItemMenuPopup
 import com.tk.quicksearch.shared.ui.components.ItemMenuRow
 import com.tk.quicksearch.shared.ui.components.ItemMenuTile
+import com.tk.quicksearch.shared.ui.components.itemMenuRemoveOption
 import com.tk.quicksearch.shared.ui.theme.AppColors
 import com.tk.quicksearch.shared.ui.theme.LocalAppIsDarkTheme
 import com.tk.quicksearch.shared.util.cachedDefaultHomeAppStatus
@@ -157,6 +159,18 @@ fun AppItemDropdownMenu(
     val authenticateWithDeviceCredential = LocalAppLockCredentialAuthenticator.current
     // Non-null while the explainer is up; true when it followed the user first turning it on.
     var speedBumpExplainerJustEnabled by remember { mutableStateOf<Boolean?>(null) }
+    val customizationRemover = LocalItemCustomizationRemover.current
+    // Removing keeps the menu open, so the menu tracks it until it's next opened.
+    var triggerRemoved by remember(expanded) { mutableStateOf(false) }
+    var nicknameRemoved by remember(expanded) { mutableStateOf(false) }
+    val triggerSet = hasTrigger && !triggerRemoved
+    val nicknameSet = hasNickname && !nicknameRemoved
+    val removeTriggerOption = itemMenuRemoveOption(
+        customizationRemover?.takeIf { triggerSet }?.let { remover -> { triggerRemoved = true; remover.removeAppTrigger(appInfo) } },
+    )
+    val removeNicknameOption = itemMenuRemoveOption(
+        customizationRemover?.takeIf { nicknameSet }?.let { remover -> { nicknameRemoved = true; remover.removeAppNickname(appInfo) } },
+    )
     val isOtherLaunchableApp = !isCurrentApp && isLaunchableApp
     val actions = buildList {
         if (isOtherLaunchableApp) {
@@ -175,15 +189,17 @@ fun AppItemDropdownMenu(
         if (!isCurrentApp) {
             add(ItemMenuTile(
                 label = stringResource(R.string.action_add_trigger),
-                icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (hasTrigger) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
+                icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (triggerSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                 onClick = { onDismiss(); onTriggerClick() },
+                longPressOption = removeTriggerOption,
             ))
         }
         if (!isCurrentApp) {
             add(ItemMenuTile(
                 label = stringResource(R.string.common_nickname),
-                icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (hasNickname) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
+                icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (nicknameSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                 onClick = { onDismiss(); onNicknameClick() },
+                longPressOption = removeNicknameOption,
             ))
         }
         add(ItemMenuTile(
@@ -388,11 +404,9 @@ fun AppItemDropdownMenu(
         forceCircularMask = appIconShape == AppIconShape.CIRCLE,
     )
 
-    var shortcutOptionsKey by remember(appInfo.packageName, expanded) { mutableStateOf<String?>(null) }
-
     if (expanded) {
+        val disableShortcutLabel = stringResource(R.string.action_disable_app_shortcut)
         val shortcutTiles = shortcuts.map { shortcut ->
-            val key = shortcutKey(shortcut)
             val displayName = shortcutDisplayName(shortcut)
             val iconBitmap = rememberShortcutIcon(shortcut, shortcutIconSizePx) ?: iconResult.bitmap
             ItemMenuTile(
@@ -413,20 +427,15 @@ fun AppItemDropdownMenu(
                     }
                 },
                 onClick = { onShortcutClick(shortcut); onDismiss() },
-                onLongClick = { shortcutOptionsKey = key },
-                enableMarquee = true,
-                anchoredContent = {
-                    AppShortcutTileDropdown(
-                        expanded = shortcutOptionsKey == key,
-                        onDismiss = { shortcutOptionsKey = null },
-                        onDisable = {
-                            shortcutOptionsKey = null
-                            // Closes the app menu too so the undo snackbar is visible.
-                            onDismiss()
-                            onDisableShortcut(shortcut)
-                        },
-                    )
-                },
+                longPressOption = ItemMenuLongPressOption(
+                    label = disableShortcutLabel,
+                    icon = Icons.Rounded.Block,
+                    onClick = {
+                        // Closes the app menu too so the undo snackbar is visible.
+                        onDismiss()
+                        onDisableShortcut(shortcut)
+                    },
+                ),
             )
         }
         ItemMenuPopup(
@@ -494,29 +503,6 @@ fun AppItemDropdownMenu(
             packageName = appInfo.packageName,
             appName = appInfo.appName,
             onDismiss = { showIconPicker.value = false },
-        )
-    }
-}
-
-/** Small popup shown on long press of a tile in the Shortcuts grid. */
-@Composable
-private fun AppShortcutTileDropdown(
-    expanded: Boolean,
-    onDismiss: () -> Unit,
-    onDisable: () -> Unit,
-) {
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = onDismiss,
-        offset = DpOffset(x = 0.dp, y = 8.dp),
-        shape = RoundedCornerShape(24.dp),
-        properties = PopupProperties(focusable = false),
-        containerColor = if (LocalAppIsDarkTheme.current) Color.Black else Color.White,
-    ) {
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.action_disable_app_shortcut)) },
-            leadingIcon = { Icon(imageVector = Icons.Rounded.Block, contentDescription = null) },
-            onClick = onDisable,
         )
     }
 }

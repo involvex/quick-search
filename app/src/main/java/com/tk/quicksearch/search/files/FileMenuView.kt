@@ -54,9 +54,11 @@ import com.tk.quicksearch.search.appSettings.AppSettingsDestination
 import com.tk.quicksearch.search.appSettings.LocalOpenAppSettingDestination
 import com.tk.quicksearch.search.models.DeviceFile
 import com.tk.quicksearch.search.utils.FileUtils
+import com.tk.quicksearch.shared.ui.components.ItemMenuLongPressOption
 import com.tk.quicksearch.shared.ui.components.ItemMenuPopup
 import com.tk.quicksearch.shared.ui.components.ItemMenuRow
 import com.tk.quicksearch.shared.ui.components.ItemMenuTile
+import com.tk.quicksearch.shared.ui.components.itemMenuRemoveOption
 import com.tk.quicksearch.shared.ui.theme.AppColors
 import com.tk.quicksearch.widgets.customButtonsWidget.CustomWidgetButtonAction
 import java.text.SimpleDateFormat
@@ -69,6 +71,7 @@ private data class FileMenuItem(
         val icon: @Composable () -> Unit,
         val onClick: () -> Unit,
         val group: FileMenuGroup = FileMenuGroup.ACTIONS,
+        val longPressOption: ItemMenuLongPressOption? = null,
 )
 
 /** Where an item appears in the long-press [ItemMenuPopup]. */
@@ -172,6 +175,9 @@ fun FileDropdownMenu(
         onExcludeExtension: () -> Unit,
         onNicknameClick: () -> Unit,
         onTriggerClick: () -> Unit,
+        /** Clears the nickname or trigger from a long press on its item; null hides that option. */
+        onRemoveNickname: (() -> Unit)? = null,
+        onRemoveTrigger: (() -> Unit)? = null,
         onOpenFolderClick: () -> Unit = {},
         onFileInfoClick: () -> Unit = {},
         onShareClick: () -> Unit = {},
@@ -187,6 +193,17 @@ fun FileDropdownMenu(
     )
     val isPinnedToNotifications = PinnedNotifications.isPinned(context, notificationAction)
     val openAppSettingDestination = LocalOpenAppSettingDestination.current
+    // Removing keeps the menu open, so the menu tracks it until it's next opened.
+    var triggerRemoved by remember(expanded) { mutableStateOf(false) }
+    var nicknameRemoved by remember(expanded) { mutableStateOf(false) }
+    val triggerSet = hasTrigger && !triggerRemoved
+    val nicknameSet = hasNickname && !nicknameRemoved
+    val removeTriggerOption = itemMenuRemoveOption(
+            onRemoveTrigger?.takeIf { triggerSet }?.let { remove -> { triggerRemoved = true; remove() } },
+    )
+    val removeNicknameOption = itemMenuRemoveOption(
+            onRemoveNickname?.takeIf { nicknameSet }?.let { remove -> { nicknameRemoved = true; remove() } },
+    )
     val menuItems = buildList {
         if (showPinnedItemMenu && isPinned) {
             add(FileMenuItem(
@@ -239,8 +256,9 @@ fun FileDropdownMenu(
         ))
         add(FileMenuItem(
                 textResId = R.string.action_add_trigger,
-                icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (hasTrigger) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
+                icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (triggerSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                 onClick = { onDismissRequest(); onTriggerClick() },
+                longPressOption = removeTriggerOption,
         ))
         add(FileMenuItem(
                 textResId = R.string.action_exclude_generic,
@@ -250,9 +268,10 @@ fun FileDropdownMenu(
 
         add(FileMenuItem(
                 textResId = R.string.common_nickname,
-                icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (hasNickname) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
+                icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (nicknameSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                 onClick = { onDismissRequest(); onNicknameClick() },
                 group = FileMenuGroup.ROWS,
+                longPressOption = removeNicknameOption,
         ))
         if (!deviceFile.isDirectory) {
             add(FileMenuItem(
@@ -360,6 +379,7 @@ fun FileDropdownMenu(
                                 ?: stringResource(item.textResId),
                         icon = item.icon,
                         onClick = item.onClick,
+                        longPressOption = item.longPressOption,
                 )
             }
         }
@@ -390,6 +410,7 @@ fun FileDropdownMenu(
                             label = stringResource(item.textResId),
                             icon = item.icon,
                             onClick = item.onClick,
+                            longPressOption = item.longPressOption,
                     )
                 },
                 rows = rowsByGroup[FileMenuGroup.ROWS].orEmpty(),

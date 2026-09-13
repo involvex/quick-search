@@ -51,6 +51,7 @@ import com.tk.quicksearch.pinnedNotifications.PinnedNotifications
 import com.tk.quicksearch.widgets.customButtonsWidget.CustomWidgetButtonAction
 import com.tk.quicksearch.search.contacts.contactInitials
 import com.tk.quicksearch.search.core.CallingApp
+import com.tk.quicksearch.search.core.LocalItemCustomizationRemover
 import com.tk.quicksearch.search.core.MessagingApp
 import com.tk.quicksearch.search.models.ContactInfo
 import com.tk.quicksearch.search.models.ContactMethod
@@ -103,6 +104,7 @@ internal fun ContactResultRow(
         showPinnedItemMenu: Boolean = false,
 ) {
         val context = LocalContext.current
+        val customizationRemover = LocalItemCustomizationRemover.current
         val addToHomeHandler =
                 remember(context) { com.tk.quicksearch.search.common.AddToHomeHandler(context) }
         var showOptions by remember { mutableStateOf(false) }
@@ -229,6 +231,8 @@ internal fun ContactResultRow(
                                 onExclude = { onExclude(contactInfo) },
                                 onNicknameClick = { onNicknameClick(contactInfo) },
                                 onTriggerClick = { onTriggerClick(contactInfo) },
+                                onRemoveNickname = customizationRemover?.let { remover -> { remover.removeContactNickname(contactInfo) } },
+                                onRemoveTrigger = customizationRemover?.let { remover -> { remover.removeContactTrigger(contactInfo) } },
                                 onAddToHome = { addToHomeHandler.addContactToHome(contactInfo) },
                                 onPinToNotifications = { PinnedNotifications.toggle(context, notificationAction) },
                                 isPinnedToNotifications = PinnedNotifications.isPinned(context, notificationAction),

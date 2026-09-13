@@ -56,9 +56,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import com.tk.quicksearch.shared.ui.components.ItemMenuLongPressOption
 import com.tk.quicksearch.shared.ui.components.ItemMenuPopup
 import com.tk.quicksearch.shared.ui.components.ItemMenuRow
 import com.tk.quicksearch.shared.ui.components.ItemMenuTile
+import com.tk.quicksearch.shared.ui.components.itemMenuRemoveOption
 import com.tk.quicksearch.R
 import com.tk.quicksearch.pinnedNotifications.PinnedNotifications
 import com.tk.quicksearch.search.apps.rememberAppIcon
@@ -72,6 +74,7 @@ import com.tk.quicksearch.search.data.AppShortcutRepository.shortcutKey
 import com.tk.quicksearch.search.data.UserAppPreferences
 import com.tk.quicksearch.search.appSettings.AppSettingsDestination
 import com.tk.quicksearch.search.appSettings.LocalOpenAppSettingDestination
+import com.tk.quicksearch.search.core.LocalItemCustomizationRemover
 import com.tk.quicksearch.search.searchScreen.LocalOverlayDividerColor
 import com.tk.quicksearch.search.searchScreen.LocalOverlayResultCardColor
 import com.tk.quicksearch.search.searchScreen.PredictedSubmitTarget
@@ -307,6 +310,7 @@ internal fun AppShortcutRow(
         showPinnedItemMenu: Boolean = false,
 ) {
         val context = androidx.compose.ui.platform.LocalContext.current
+        val customizationRemover = LocalItemCustomizationRemover.current
         val addToHomeHandler =
                 remember(context) { com.tk.quicksearch.search.common.AddToHomeHandler(context) }
         var showOptions by remember { mutableStateOf(false) }
@@ -408,6 +412,8 @@ internal fun AppShortcutRow(
                                 onAppInfoClick = { onAppInfoClick(shortcut) },
                                 onNicknameClick = { onNicknameClick(shortcut) },
                                 onTriggerClick = { onTriggerClick(shortcut) },
+                                onRemoveNickname = customizationRemover?.let { remover -> { remover.removeAppShortcutNickname(shortcut) } },
+                                onRemoveTrigger = customizationRemover?.let { remover -> { remover.removeAppShortcutTrigger(shortcut) } },
                                 onEditCustomShortcut = onEditCustomShortcut,
                                 onEditShortcutIcon = onEditShortcutIcon,
                                 onAddToHome = { addToHomeHandler.addAppShortcutToHome(shortcut) },
@@ -424,6 +430,7 @@ private data class AppShortcutMenuItem(
         val onClick: () -> Unit,
         val group: ItemMenuGroup = ItemMenuGroup.ACTIONS,
         val textArg: String? = null,
+        val longPressOption: ItemMenuLongPressOption? = null,
 )
 
 /** Where an item appears in the long-press [ItemMenuPopup]. */
@@ -450,6 +457,9 @@ private fun AppShortcutDropdownMenu(
         onAppInfoClick: () -> Unit,
         onNicknameClick: () -> Unit,
         onTriggerClick: () -> Unit,
+        /** Clears the nickname or trigger from a long press on its tile; null hides that option. */
+        onRemoveNickname: (() -> Unit)? = null,
+        onRemoveTrigger: (() -> Unit)? = null,
         onEditCustomShortcut: (StaticShortcut) -> Unit,
         onEditShortcutIcon: (StaticShortcut) -> Unit,
         onAddToHome: () -> Unit,
@@ -481,6 +491,17 @@ private fun AppShortcutDropdownMenu(
                 !UserAppPreferences(context).getAppShortcutIconOverride(shortcutKey(shortcut)).isNullOrBlank()
         }
 
+        // Removing keeps the menu open, so the menu tracks it until it's next opened.
+        var triggerRemoved by remember(expanded) { mutableStateOf(false) }
+        var nicknameRemoved by remember(expanded) { mutableStateOf(false) }
+        val triggerSet = hasTrigger && !triggerRemoved
+        val nicknameSet = hasNickname && !nicknameRemoved
+        val removeTriggerOption = itemMenuRemoveOption(
+                onRemoveTrigger?.takeIf { triggerSet }?.let { remove -> { triggerRemoved = true; remove() } },
+        )
+        val removeNicknameOption = itemMenuRemoveOption(
+                onRemoveNickname?.takeIf { nicknameSet }?.let { remove -> { nicknameRemoved = true; remove() } },
+        )
         val menuItems = buildList {
                 if (showPinnedItemMenu && isPinned) {
                         add(AppShortcutMenuItem(
@@ -513,13 +534,15 @@ private fun AppShortcutDropdownMenu(
                 ))
                 add(AppShortcutMenuItem(
                         textResId = R.string.action_add_trigger,
-                        icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (hasTrigger) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
+                        icon = { Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (triggerSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                         onClick = { onDismissRequest(); onTriggerClick() },
+                        longPressOption = removeTriggerOption,
                 ))
                 add(AppShortcutMenuItem(
                         textResId = R.string.common_nickname,
-                        icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (hasNickname) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
+                        icon = { Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (nicknameSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current) },
                         onClick = { onDismissRequest(); onNicknameClick() },
+                        longPressOption = removeNicknameOption,
                 ))
                 add(AppShortcutMenuItem(
                         textResId = R.string.action_disable_app_shortcut,
@@ -634,9 +657,7 @@ private fun AppShortcutDropdownMenu(
                                         icon = item.icon,
                                         onClick = item.onClick,
                                         destructive = item.textResId == R.string.action_uninstall_app ||
-                                                item.textResId == R.string.action_uninstall_named,
-                                        enableMarquee = item.textResId == R.string.action_disable_all_app_shortcuts_named,
-                                )
+                                                item.textResId == R.string.action_uninstall_named,                                )
                         }
                 }
                 ItemMenuPopup(
@@ -677,6 +698,7 @@ private fun AppShortcutDropdownMenu(
                                         label = stringResource(item.textResId),
                                         icon = item.icon,
                                         onClick = item.onClick,
+                                        longPressOption = item.longPressOption,
                                 )
                         },
                         rows = listOf(ItemMenuGroup.APPEARANCE, ItemMenuGroup.BEHAVIOR, ItemMenuGroup.SYSTEM).flatMap { rowsByGroup[it].orEmpty() },

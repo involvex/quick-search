@@ -19,6 +19,10 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,9 +33,11 @@ import androidx.compose.ui.window.PopupProperties
 import com.tk.quicksearch.R
 import com.tk.quicksearch.search.appSettings.AppSettingsDestination
 import com.tk.quicksearch.search.appSettings.LocalOpenAppSettingDestination
+import com.tk.quicksearch.shared.ui.components.ItemMenuLongPressOption
 import com.tk.quicksearch.shared.ui.components.ItemMenuPopup
 import com.tk.quicksearch.shared.ui.components.ItemMenuRow
 import com.tk.quicksearch.shared.ui.components.ItemMenuTile
+import com.tk.quicksearch.shared.ui.components.itemMenuRemoveOption
 import com.tk.quicksearch.shared.ui.theme.AppColors
 
 /** Menu item data class for contact dropdown menu. */
@@ -40,6 +46,7 @@ private data class ContactMenuItem(
         val icon: @Composable () -> Unit,
         val onClick: () -> Unit,
         val isTile: Boolean = false,
+        val longPressOption: ItemMenuLongPressOption? = null,
 )
 
 /** Long-press menu for contact result rows with actions like pin/unpin, nickname, and exclude. */
@@ -58,12 +65,26 @@ fun ContactDropdownMenu(
         onExclude: () -> Unit,
         onNicknameClick: () -> Unit,
         onTriggerClick: () -> Unit,
+        /** Clears the nickname or trigger from a long press on its tile; null hides that option. */
+        onRemoveNickname: (() -> Unit)? = null,
+        onRemoveTrigger: (() -> Unit)? = null,
         onAddToHome: () -> Unit,
         onPinToNotifications: () -> Unit,
         isPinnedToNotifications: Boolean,
         showPinnedItemMenu: Boolean = false,
 ) {
         val openAppSettingDestination = LocalOpenAppSettingDestination.current
+        // Removing keeps the menu open, so the menu tracks it until it's next opened.
+        var triggerRemoved by remember(expanded) { mutableStateOf(false) }
+        var nicknameRemoved by remember(expanded) { mutableStateOf(false) }
+        val triggerSet = hasTrigger && !triggerRemoved
+        val nicknameSet = hasNickname && !nicknameRemoved
+        val removeTriggerOption = itemMenuRemoveOption(
+                onRemoveTrigger?.takeIf { triggerSet }?.let { remove -> { triggerRemoved = true; remove() } },
+        )
+        val removeNicknameOption = itemMenuRemoveOption(
+                onRemoveNickname?.takeIf { nicknameSet }?.let { remove -> { nicknameRemoved = true; remove() } },
+        )
         val menuItems = buildList {
             if (showPinnedItemMenu && isPinned) {
                 add(
@@ -127,13 +148,14 @@ fun ContactDropdownMenu(
                             textResId =
                                     R.string.action_add_trigger,
                             icon = {
-                                Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (hasTrigger) AppColors.ItemMenuActiveIconTint else LocalContentColor.current)
+                                Icon(imageVector = Icons.Rounded.Bolt, contentDescription = null, tint = if (triggerSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current)
                             },
                             onClick = {
                                 onDismissRequest()
                                 onTriggerClick()
                             },
                             isTile = true,
+                            longPressOption = removeTriggerOption,
                     ),
             )
             add(
@@ -141,13 +163,14 @@ fun ContactDropdownMenu(
                             textResId =
                                     R.string.common_nickname,
                             icon = {
-                                Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (hasNickname) AppColors.ItemMenuActiveIconTint else LocalContentColor.current)
+                                Icon(imageVector = Icons.Rounded.Edit, contentDescription = null, tint = if (nicknameSet) AppColors.ItemMenuActiveIconTint else LocalContentColor.current)
                             },
                             onClick = {
                                 onDismissRequest()
                                 onNicknameClick()
                             },
                             isTile = true,
+                            longPressOption = removeNicknameOption,
                     ),
             )
             add(
@@ -256,6 +279,7 @@ fun ContactDropdownMenu(
                                 label = stringResource(item.textResId),
                                 icon = item.icon,
                                 onClick = item.onClick,
+                                longPressOption = item.longPressOption,
                         )
                     },
                     rows = menuItems.filterNot { it.isTile }.map { item ->
