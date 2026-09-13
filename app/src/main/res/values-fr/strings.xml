@@ -70,6 +70,10 @@
 <string name="action_add_to_home">Ajouter à l\'écran d\'accueil</string>
 <string name="action_add_trigger">Ajouter un déclencheur</string>
 <string name="action_app_info">Infos sur l\'application</string>
+    <string name="action_lock_app">Verrouiller</string>
+    <string name="action_unlock_app">Déverrouiller</string>
+    <string name="app_lock_prompt_lock">Verrouiller %1$s</string>
+    <string name="app_lock_prompt_unlock">Déverrouiller %1$s</string>
 <string name="action_change_icon">Changer l\'icône</string>
 <string name="icon_picker_search">Rechercher des icônes</string>
 <string name="icon_picker_title">Changer l\'icône de « %1$s »</string>

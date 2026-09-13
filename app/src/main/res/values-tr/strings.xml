@@ -69,6 +69,10 @@
 <string name="action_add_to_home">Ana ekrana ekle</string>
 <string name="action_add_trigger">Tetikleyici</string>
 <string name="action_app_info">Uygulama bilgisi</string>
+    <string name="action_lock_app">Kilitle</string>
+    <string name="action_unlock_app">Kilidi aç</string>
+    <string name="app_lock_prompt_lock">%1$s uygulamasını kilitle</string>
+    <string name="app_lock_prompt_unlock">%1$s uygulamasının kilidini aç</string>
 <string name="action_change_icon">Simgeyi değiştir</string>
 <string name="icon_picker_search">Simgeleri ara</string>
 <string name="icon_picker_title">"%1$s" için simgeyi değiştir</string>

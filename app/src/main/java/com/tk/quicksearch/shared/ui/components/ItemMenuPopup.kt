@@ -92,8 +92,10 @@ fun ItemMenuPopup(
         leadingContent = leadingContent,
         containerColor = dialogBackground,
         contentCardColor = dialogBackground,
-        contentSpacing = 0.dp,
+        // Keep scrolled menu items visually clear of the fixed title area.
+        contentSpacing = DesignTokens.SpacingSmall,
         headerSpacing = DesignTokens.SpacingMedium,
+        contentTopPadding = 0.dp,
         // The popup's own bottom padding already separates the last item from the edge.
         contentBottomPadding = 0.dp,
     ) {

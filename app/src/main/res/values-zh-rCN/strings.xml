@@ -70,6 +70,10 @@
     <string name="action_add_to_home">添加到主屏幕</string>
     <string name="action_add_trigger">添加触发词</string>
     <string name="action_app_info">应用信息</string>
+    <string name="action_lock_app">锁定</string>
+    <string name="action_unlock_app">解锁</string>
+    <string name="app_lock_prompt_lock">锁定 %1$s</string>
+    <string name="app_lock_prompt_unlock">解锁 %1$s</string>
     <string name="action_change_icon">更改图标</string>
     <string name="icon_picker_search">搜索图标</string>
     <string name="icon_picker_title">更改“%1$s”的图标</string>

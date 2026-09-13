@@ -70,6 +70,10 @@
     <string name="action_add_to_home">Zum Startbildschirm hinzufügen</string>
     <string name="action_add_trigger">Auslöser</string>
     <string name="action_app_info">App-Info</string>
+    <string name="action_lock_app">Sperren</string>
+    <string name="action_unlock_app">Entsperren</string>
+    <string name="app_lock_prompt_lock">%1$s sperren</string>
+    <string name="app_lock_prompt_unlock">%1$s entsperren</string>
     <string name="action_change_icon">Symbol ändern</string>
     <string name="icon_picker_search">Symbole suchen</string>
     <string name="icon_picker_title">Symbol für „%1$s“ ändern</string>

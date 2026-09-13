@@ -70,6 +70,10 @@
     <string name="action_add_to_home">హోమ్ స్క్రీన్‌కు జోడించు</string>
     <string name="action_add_trigger">ట్రిగ్గర్ జోడించు</string>
     <string name="action_app_info">యాప్ సమాచారం</string>
+    <string name="action_lock_app">లాక్ చేయండి</string>
+    <string name="action_unlock_app">అన్‌లాక్ చేయండి</string>
+    <string name="app_lock_prompt_lock">%1$sను లాక్ చేయండి</string>
+    <string name="app_lock_prompt_unlock">%1$sను అన్‌లాక్ చేయండి</string>
     <string name="action_change_icon">ఐకాన్ మార్చు</string>
     <string name="icon_picker_search">చిహ్నాలను శోధించండి</string>
     <string name="icon_picker_title">"%1$s" కోసం చిహ్నాన్ని మార్చండి</string>

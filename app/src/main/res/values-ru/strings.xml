@@ -70,6 +70,10 @@
 <string name="action_add_to_home">На главный экран</string>
 <string name="action_add_trigger">Добавить триггер</string>
 <string name="action_app_info">О приложении</string>
+    <string name="action_lock_app">Заблокировать</string>
+    <string name="action_unlock_app">Разблокировать</string>
+    <string name="app_lock_prompt_lock">Заблокировать %1$s</string>
+    <string name="app_lock_prompt_unlock">Разблокировать %1$s</string>
 <string name="action_change_icon">Изменить значок</string>
 <string name="icon_picker_search">Поиск значков</string>
 <string name="icon_picker_title">Изменить значок для «%1$s»</string>

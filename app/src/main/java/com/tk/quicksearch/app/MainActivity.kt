@@ -9,7 +9,7 @@ import android.provider.OpenableColumns
 import android.os.Bundle
 import android.os.Trace
 import android.view.KeyEvent
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -56,7 +56,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-open class MainActivity : ComponentActivity() {
+open class MainActivity : FragmentActivity() {
     private data class PendingContactActionPickerRequest(
         val contactId: Long,
         val isPrimary: Boolean,
