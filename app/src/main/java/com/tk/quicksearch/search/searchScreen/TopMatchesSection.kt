@@ -492,6 +492,7 @@ internal fun TopMatchesSection(
     params: SectionRenderParams,
     showWallpaperBackground: Boolean,
     showTopResultIndicator: Boolean,
+    showHeader: Boolean = true,
     selectedMatchIndex: Int? = null,
     reverseOrder: Boolean = false,
     screenTimeState: ScreenTimeState,
@@ -507,7 +508,9 @@ internal fun TopMatchesSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingXSmall),
     ) {
-        TopMatchesHeader()
+        if (showHeader) {
+            TopMatchesHeader()
+        }
 
         displayedMatches.forEach { item ->
             key(item.stableKey()) {
