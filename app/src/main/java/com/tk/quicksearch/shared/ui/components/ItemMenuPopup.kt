@@ -35,6 +35,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -198,16 +200,20 @@ private fun ItemMenuMarqueeText(
     color: Color,
     modifier: Modifier = Modifier,
     textAlign: TextAlign? = null,
+    /** Changing this restarts the marquee from the beginning. */
+    replayKey: Int = 0,
 ) {
-    Text(
-        text = text,
-        style = style,
-        color = color,
-        maxLines = 1,
-        overflow = TextOverflow.Clip,
-        textAlign = textAlign,
-        modifier = modifier.basicMarquee(),
-    )
+    key(replayKey) {
+        Text(
+            text = text,
+            style = style,
+            color = color,
+            maxLines = 1,
+            overflow = TextOverflow.Clip,
+            textAlign = textAlign,
+            modifier = modifier.basicMarquee(),
+        )
+    }
 }
 
 /** Small dropdown anchored to its parent, shown on long press of an item with a [ItemMenuLongPressOption]. */
@@ -282,6 +288,7 @@ private fun ItemMenuTileButton(
 ) {
     val view = LocalView.current
     var showLongPressOption by remember { mutableStateOf(false) }
+    var marqueeReplayKey by remember { mutableIntStateOf(0) }
     val onLongClick = resolveLongClick(tile.onLongClick, tile.longPressOption) { showLongPressOption = true }
     Box(modifier = modifier) {
         Column(
@@ -294,6 +301,7 @@ private fun ItemMenuTileButton(
                     onLongClick = onLongClick?.let { onLongClick ->
                         {
                             hapticConfirm(view)()
+                            marqueeReplayKey++
                             onLongClick()
                         }
                     },
@@ -312,6 +320,7 @@ private fun ItemMenuTileButton(
                 style = MaterialTheme.typography.labelMedium,
                 color = AppColors.DialogText,
                 textAlign = TextAlign.Center,
+                replayKey = marqueeReplayKey,
             )
         }
         // Matches the tile's bounds so anchored popups position against it.
@@ -331,6 +340,7 @@ private fun ItemMenuListRow(row: ItemMenuRow) {
     val contentColor =
         if (row.destructive) MaterialTheme.colorScheme.error else AppColors.DialogText
     var showLongPressOption by remember { mutableStateOf(false) }
+    var marqueeReplayKey by remember { mutableIntStateOf(0) }
     val onLongClick = resolveLongClick(row.onLongClick, row.longPressOption) { showLongPressOption = true }
     Box(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -343,6 +353,7 @@ private fun ItemMenuListRow(row: ItemMenuRow) {
                     onLongClick = onLongClick?.let { onLongClick ->
                         {
                             hapticConfirm(view)()
+                            marqueeReplayKey++
                             onLongClick()
                         }
                     },
@@ -361,6 +372,7 @@ private fun ItemMenuListRow(row: ItemMenuRow) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = contentColor,
                 modifier = Modifier.weight(1f),
+                replayKey = marqueeReplayKey,
             )
             row.trailingText?.let { value ->
                 Text(
@@ -419,6 +431,7 @@ private fun ItemMenuButton(
         } else {
             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
         }
+    var marqueeReplayKey by remember { mutableIntStateOf(0) }
     val longHoldInteractionSource = remember { MutableInteractionSource() }
     val longHoldIndication = LocalIndication.current
     val coroutineScope = rememberCoroutineScope()
@@ -463,6 +476,7 @@ private fun ItemMenuButton(
                 onLongClick = button.onLongClick?.let { onLongClick ->
                     {
                         hapticConfirm(view)()
+                        marqueeReplayKey++
                         onLongClick()
                     }
                 },
@@ -492,6 +506,7 @@ private fun ItemMenuButton(
                     style = MaterialTheme.typography.labelLarge,
                     color = contentColor,
                     modifier = Modifier.weight(1f, fill = false),
+                    replayKey = marqueeReplayKey,
                 )
             }
         }

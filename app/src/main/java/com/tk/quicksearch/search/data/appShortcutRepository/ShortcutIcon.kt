@@ -69,17 +69,13 @@ internal fun rememberShortcutIcon(
     iconSizePx: Int,
 ): ImageBitmap? {
     val context = LocalContext.current
-    val cachedIcon =
-        remember(shortcut, iconSizePx) {
-            ShortcutIconMemoryCache.get(shortcutIconCacheKey(shortcut, iconSizePx))
-        }
+    val cacheKey = remember(shortcut, iconSizePx) { shortcutIconCacheKey(shortcut, iconSizePx) }
+    val cachedIcon = remember(cacheKey) { ShortcutIconMemoryCache.get(cacheKey) }
+    // Keyed per shortcut: shortcuts of one app can share every icon source field, so a slot
+    // reused by a different shortcut (e.g. after one is disabled) must still reload.
     val iconState =
-        produceState(
-            initialValue = cachedIcon,
-            key1 = shortcut.packageName,
-            key2 = shortcut.iconResId,
-            key3 = (shortcut.iconBase64?.hashCode() ?: 0) to iconSizePx,
-        ) {
+        produceState(initialValue = cachedIcon, key1 = cacheKey) {
+            value = cachedIcon
             value =
                 withContext(Dispatchers.IO) {
                     loadShortcutIconBitmap(

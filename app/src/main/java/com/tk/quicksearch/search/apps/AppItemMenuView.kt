@@ -430,11 +430,8 @@ fun AppItemDropdownMenu(
                 longPressOption = ItemMenuLongPressOption(
                     label = disableShortcutLabel,
                     icon = Icons.Rounded.Block,
-                    onClick = {
-                        // Closes the app menu too so the undo snackbar is visible.
-                        onDismiss()
-                        onDisableShortcut(shortcut)
-                    },
+                    // Keeps the app menu open; the disabled shortcut drops out of the grid.
+                    onClick = { onDisableShortcut(shortcut) },
                 ),
             )
         }

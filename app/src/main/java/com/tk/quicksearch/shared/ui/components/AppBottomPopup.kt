@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -35,6 +36,7 @@ import com.tk.quicksearch.shared.ui.theme.AppColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -264,6 +266,12 @@ fun AppBottomPopup(
                     }
                 }
             }
+            // Dialogs are separate windows, so screen-level overlays (e.g. the undo snackbar)
+            // must be drawn here to appear above the popup.
+            LocalPopupOverlayContent.current?.invoke(this)
         }
     }
 }
+
+/** Content drawn above every [AppBottomPopup], in the popup's own window. */
+val LocalPopupOverlayContent = staticCompositionLocalOf<(@Composable BoxScope.() -> Unit)?> { null }

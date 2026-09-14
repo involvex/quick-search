@@ -16,6 +16,8 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import com.tk.quicksearch.shared.ui.components.LocalPopupOverlayContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -233,6 +235,23 @@ fun SearchRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     val effectiveSnackbarHostState = overlaySnackbarHostState ?: snackbarHostState
     val snackbarScope = rememberCoroutineScope()
+    // Mirrors the undo snackbar inside popups so it isn't hidden behind them.
+    val popupUndoSnackbar: @Composable BoxScope.() -> Unit =
+        remember(effectiveSnackbarHostState) {
+            {
+                ExcludeUndoSnackbarHost(
+                    hostState = effectiveSnackbarHostState,
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(
+                                start = DesignTokens.SpacingLarge,
+                                end = DesignTokens.SpacingLarge,
+                                bottom = DesignTokens.SpacingHuge,
+                            ),
+                )
+            }
+        }
     val undoLabel = stringResource(R.string.action_undo)
 
     val showUndoSnackbarVisuals: (UndoSnackbarVisuals, () -> Unit) -> Unit = { visuals, onUndo ->
@@ -868,6 +887,7 @@ fun SearchRoute(
             LocalAppLockAuthenticator provides requestBiometricAuthentication,
             LocalAppLockCredentialAuthenticator provides requestDeviceCredentialAuthentication,
             LocalOpenAppSettingDestination provides onOpenAppSettingDestination,
+            LocalPopupOverlayContent provides popupUndoSnackbar,
         ) {
             SearchScreenComposable(
                 modifier =
