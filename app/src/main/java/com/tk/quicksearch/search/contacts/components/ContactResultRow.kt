@@ -286,7 +286,8 @@ internal fun ContactAvatar(
                 modifier =
                         modifier.then(
                                 if (onClick != null) {
-                                        Modifier.clickable(onClick = onClick)
+                                        // Keeps the press ripple inside the circle.
+                                        Modifier.clip(CircleShape).clickable(onClick = onClick)
                                 } else {
                                         Modifier
                                 },
