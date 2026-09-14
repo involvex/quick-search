@@ -158,6 +158,8 @@ private enum class AppIconDisplayMode {
 private data class PinnedAppDragState(
         val key: String,
         val startIndex: Int,
+        val originIndex: Int,
+        val originApps: List<AppInfo>,
         val offsetX: Float = 0f,
         val offsetY: Float = 0f,
 )
@@ -1123,18 +1125,26 @@ private fun AppGrid(
                             (AppGridRowSpacing * (visibleRows - 1).coerceAtLeast(0))
                 }
 
-        fun movePinnedApp(fromVisualIndex: Int, toVisualIndex: Int) {
-            if (!reorderPinnedApps || fromVisualIndex == toVisualIndex) return
-            val currentVisualOrder =
-                    appsInVisualGridOrder(displayedApps, columns, oneHandedMode)
-            if (fromVisualIndex !in currentVisualOrder.indices ||
-                    toVisualIndex !in currentVisualOrder.indices
+        // Rearranges relative to the order at drag start: moving to a different row swaps the
+        // two apps, moving within the same row shifts the apps in between.
+        fun movePinnedApp(state: PinnedAppDragState, toVisualIndex: Int) {
+            if (!reorderPinnedApps) return
+            val originVisualOrder =
+                    appsInVisualGridOrder(state.originApps, columns, oneHandedMode)
+            val fromVisualIndex = state.originIndex
+            if (fromVisualIndex !in originVisualOrder.indices ||
+                    toVisualIndex !in originVisualOrder.indices
             ) {
                 return
             }
             val reorderedVisualApps =
-                    currentVisualOrder.toMutableList().apply {
-                        add(toVisualIndex, removeAt(fromVisualIndex))
+                    originVisualOrder.toMutableList().apply {
+                        if (fromVisualIndex / columns != toVisualIndex / columns) {
+                            this[fromVisualIndex] = originVisualOrder[toVisualIndex]
+                            this[toVisualIndex] = originVisualOrder[fromVisualIndex]
+                        } else if (fromVisualIndex != toVisualIndex) {
+                            add(toVisualIndex, removeAt(fromVisualIndex))
+                        }
                     }
             displayedApps =
                     appsInPersistedGridOrder(reorderedVisualApps, columns, oneHandedMode)
@@ -1217,7 +1227,13 @@ private fun AppGrid(
                         it.launchCountKey() == app.launchCountKey()
                     }
             if (index >= 0) {
-                dragState = PinnedAppDragState(app.launchCountKey(), index)
+                dragState =
+                        PinnedAppDragState(
+                                key = app.launchCountKey(),
+                                startIndex = index,
+                                originIndex = index,
+                                originApps = displayedApps,
+                        )
             }
         }
         val handleDrag: (Float, Float) -> Unit = handleDrag@{ dragX, dragY ->
@@ -1242,7 +1258,7 @@ private fun AppGrid(
                 val newRow = targetIndex / columns
                 val layoutShiftX = (newCol - oldCol) * (rowItemWidthPx + spacingPx)
                 val layoutShiftY = (newRow - oldRow) * (itemHeightPx + spacingPx)
-                movePinnedApp(currentIndex, targetIndex)
+                movePinnedApp(updatedState, targetIndex)
                 dragState =
                         updatedState.copy(
                                 startIndex = targetIndex,
