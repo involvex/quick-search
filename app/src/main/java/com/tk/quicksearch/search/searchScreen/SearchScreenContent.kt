@@ -167,6 +167,7 @@ internal fun SearchScreenContent(
         onRestoreSearchKeyboardHandled: () -> Unit = {},
         onStartupKeyboardVisible: () -> Unit = {},
         onClearQuery: () -> Unit,
+        onVoiceClick: () -> Unit,
         onSettingsClick: () -> Unit,
         onAppClick: (com.tk.quicksearch.search.models.AppInfo) -> Unit,
         onRequestUsagePermission: () -> Unit,
@@ -1790,6 +1791,7 @@ internal fun SearchScreenContent(
             ) {
                 OpenKeyboardAction(
                         text = openKeyboardText,
+                        onVoiceClick = onVoiceClick,
                         showWallpaperBackground = state.showWallpaperBackground,
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {

@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -167,6 +168,29 @@ fun SearchRoute(
     }
     val searchScreenState = searchScreenSnapshot ?: uiState
     val context = LocalContext.current
+    val voiceInputLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            result.data
+                ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                ?.firstOrNull()
+                ?.takeIf(String::isNotBlank)
+                ?.let(viewModel::onQueryChange)
+        }
+    val startVoiceInput: () -> Unit = {
+        val intent =
+            Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM,
+                )
+                putExtra(RecognizerIntent.EXTRA_PROMPT, context.getString(R.string.app_name))
+            }
+        try {
+            voiceInputLauncher.launch(intent)
+        } catch (_: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.voice_input_not_available, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val nicknameUpdateVersion = uiState.nicknameUpdateVersion
     val getAppNickname: (String) -> String? =
@@ -858,6 +882,7 @@ fun SearchRoute(
             onRestoreSearchKeyboardHandled = viewModel::consumeSearchKeyboardRestoreRequest,
             onStartupKeyboardVisible = viewModel::notifyStartupKeyboardVisible,
             onClearQuery = viewModel::clearQuery,
+            onVoiceClick = startVoiceInput,
             onRequestUsagePermission = { viewModel.openUsageAccessSettings() },
             onToggleOtherSearchItemPin = viewModel::toggleOtherSearchItemPin,
             onSettingsClick = onSettingsClick,
