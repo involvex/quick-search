@@ -17,6 +17,7 @@ enum class AppSettingsDestination {
     SEARCH_ENGINES,
     TOOLS,
     TASKER_INTEGRATION,
+    TERMUX_INTEGRATION,
     LAUNCH_OPTIONS,
     MORE_OPTIONS,
     PERMISSIONS,

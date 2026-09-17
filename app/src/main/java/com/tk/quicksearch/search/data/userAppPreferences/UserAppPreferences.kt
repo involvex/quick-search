@@ -1472,6 +1472,9 @@ class UserAppPreferences(
     fun isTermuxIntegrationEnabled(): Boolean = uiPreferences.isTermuxIntegrationEnabled()
     fun setTermuxIntegrationEnabled(enabled: Boolean) = uiPreferences.setTermuxIntegrationEnabled(enabled)
 
+    fun getTermuxVariantPackage(): String = uiPreferences.getTermuxVariantPackage()
+    fun setTermuxVariantPackage(packageName: String) = uiPreferences.setTermuxVariantPackage(packageName)
+
     fun getTermuxExecutionMode(): TermuxExecutionMode =
         try { TermuxExecutionMode.valueOf(uiPreferences.getTermuxExecutionMode().uppercase()) }
         catch (e: Exception) { TermuxExecutionMode.BACKGROUND }

@@ -537,6 +537,7 @@ internal fun SettingsDetailLevel1Screen(
                     SettingsDetailType.DATE_CALCULATOR_INFO,
                     SettingsDetailType.CUSTOM_TOOL_EDITOR,
                     SettingsDetailType.TASKER_INTEGRATION,
+                    SettingsDetailType.TERMUX_INTEGRATION,
                     SettingsDetailType.NICKNAMES,
                     SettingsDetailType.TRIGGERS,
                     SettingsDetailType.GESTURES,

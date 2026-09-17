@@ -670,6 +670,7 @@ data class SearchUiState(
         val termuxIntegrationEnabled: Boolean = true,
         val termuxDefaultExecutionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
         val termuxPrefix: String = "$",
+        val termuxVariantPackage: String = "",
         val AiSearchState: AiSearchState = AiSearchState(),
         // Gemini
         val hasApiKey: Boolean = false,
@@ -895,6 +896,7 @@ fun SearchUiState(
                 termuxIntegrationEnabled = features.termuxIntegrationEnabled,
                 termuxDefaultExecutionMode = features.termuxDefaultExecutionMode,
                 termuxPrefix = features.termuxPrefix,
+                termuxVariantPackage = features.termuxVariantPackage,
                 recentQueriesEnabled = features.recentQueriesEnabled,
                 recentQueriesDisplayCount = features.recentQueriesDisplayCount,
                 appResultRowCount = features.appResultRowCount,

@@ -1171,4 +1171,15 @@
     <string name="termux_delete_command">Delete command</string>
     <string name="termux_saved_alias">Alias: %1$s</string>
     <string name="termux_alias_conflict">This alias is already in use</string>
+    <string name="termux_grant_permission">Grant permission</string>
+    <string name="termux_setup_hint">Grant the Run Command permission above. The Termux app must also allow external apps: enable “allow-external-apps” in its settings, otherwise every command is rejected.</string>
+    <string name="termux_settings_status_title">Status</string>
+    <string name="termux_settings_variant_title">Termux app</string>
+    <string name="termux_settings_variant_auto">Automatic</string>
+    <string name="termux_settings_variant_auto_desc">Use Involvex Termux when installed, otherwise Termux</string>
+    <string name="termux_settings_installed">Installed</string>
+    <string name="termux_settings_not_installed">Not installed</string>
+    <string name="termux_settings_permission_title">Run Command permission</string>
+    <string name="termux_settings_permission_granted">Granted</string>
+    <string name="termux_settings_permission_denied">Not granted</string>
 </resources>

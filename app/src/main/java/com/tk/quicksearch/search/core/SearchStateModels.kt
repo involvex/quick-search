@@ -208,6 +208,7 @@ data class SearchFeatureState(
         val termuxIntegrationEnabled: Boolean = true,
         val termuxDefaultExecutionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
         val termuxPrefix: String = "$",
+        val termuxVariantPackage: String = "",
         // Search history
         val recentQueriesEnabled: Boolean = true,
         val recentQueriesDisplayCount: Int = UiPreferences.DEFAULT_RECENT_QUERIES_DISPLAY_COUNT,

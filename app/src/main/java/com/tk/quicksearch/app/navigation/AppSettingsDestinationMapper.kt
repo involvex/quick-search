@@ -10,6 +10,7 @@ internal fun AppSettingsDestination.toSettingsDetailTypeOrNull(): SettingsDetail
         AppSettingsDestination.SEARCH_ENGINES -> SettingsDetailType.SEARCH_ENGINES
         AppSettingsDestination.TOOLS -> SettingsDetailType.TOOLS
         AppSettingsDestination.TASKER_INTEGRATION -> SettingsDetailType.TASKER_INTEGRATION
+        AppSettingsDestination.TERMUX_INTEGRATION -> SettingsDetailType.TERMUX_INTEGRATION
         AppSettingsDestination.LAUNCH_OPTIONS -> SettingsDetailType.LAUNCH_OPTIONS
         AppSettingsDestination.MORE_OPTIONS -> SettingsDetailType.MORE_OPTIONS
         AppSettingsDestination.PERMISSIONS -> SettingsDetailType.PERMISSIONS

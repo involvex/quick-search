@@ -128,6 +128,7 @@ fun ContentLayout(
     onOpenPermissionsSettings: () -> Unit = {},
     selectedTopMatchIndex: Int? = null,
     onTermuxExecute: () -> Unit = {},
+    onTermuxGrantPermission: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val userPreferences = remember(context) { UserAppPreferences(context) }
@@ -1070,6 +1071,7 @@ fun ContentLayout(
                             commandState = state.termuxCommandState,
                             showWallpaperBackground = effectiveShowWallpaperBackground,
                             onExecute = onTermuxExecute,
+                            onGrantPermission = onTermuxGrantPermission,
                         )
                     }
                 }

@@ -1152,4 +1152,15 @@
     <string name="speed_bump_overlay_prompt">%1$s wird gleich geöffnet…</string>
     <string name="speed_bump_overlay_title">Atme tief durch</string>
     <string name="speed_bump_title">SpeedBump</string>
+    <string name="termux_grant_permission">Berechtigung erteilen</string>
+    <string name="termux_setup_hint">Erteile oben die Berechtigung „Befehle ausführen“. Außerdem muss die Termux-App externe Apps zulassen: Aktiviere „allow-external-apps“ in ihren Einstellungen, sonst werden alle Befehle abgelehnt.</string>
+    <string name="termux_settings_status_title">Status</string>
+    <string name="termux_settings_variant_title">Termux-App</string>
+    <string name="termux_settings_variant_auto">Automatisch</string>
+    <string name="termux_settings_variant_auto_desc">Involvex Termux verwenden, falls installiert, sonst Termux</string>
+    <string name="termux_settings_installed">Installiert</string>
+    <string name="termux_settings_not_installed">Nicht installiert</string>
+    <string name="termux_settings_permission_title">Berechtigung „Befehle ausführen“</string>
+    <string name="termux_settings_permission_granted">Erteilt</string>
+    <string name="termux_settings_permission_denied">Nicht erteilt</string>
 </resources>

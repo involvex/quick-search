@@ -9,6 +9,7 @@ import com.tk.quicksearch.search.data.preferences.RATE_QUICK_SEARCH_ENABLED
 import com.tk.quicksearch.search.utils.SearchQueryContext
 import com.tk.quicksearch.shared.util.isTablet
 import com.tk.quicksearch.tools.tasker.TaskerIntegration
+import com.tk.quicksearch.tools.termux.TermuxVariant
 
 private val WHITESPACE_REGEX = "\\s+".toRegex()
 
@@ -87,6 +88,15 @@ class AppSettingsRepository(
                     descriptionRes = R.string.tasker_integration_description,
                     destination = AppSettingsDestination.TASKER_INTEGRATION,
                     keywords = listOf("tasker", "broadcast", "intent", "automation", "action", "alias"),
+                )
+            }
+            if (isTermuxVariantInstalled()) {
+                addNavigation(
+                    id = "app_settings_termux_integration",
+                    titleRes = R.string.termux_settings_title,
+                    descriptionRes = R.string.termux_settings_description,
+                    destination = AppSettingsDestination.TERMUX_INTEGRATION,
+                    keywords = listOf("termux", "shell", "command", "terminal", "alias", "automation"),
                 )
             }
             addNavigation(
@@ -614,6 +624,9 @@ class AppSettingsRepository(
         runCatching {
             context.packageManager.getPackageInfo(TaskerIntegration.PACKAGE_NAME, 0)
         }.isSuccess
+
+    private fun isTermuxVariantInstalled(): Boolean =
+        TermuxVariant.installedVariants(context).isNotEmpty()
 
     private fun MutableList<AppSettingResult>.addToggle(
         id: String,

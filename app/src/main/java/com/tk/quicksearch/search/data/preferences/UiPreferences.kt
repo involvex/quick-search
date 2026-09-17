@@ -994,6 +994,17 @@ class UiPreferences(
         setBooleanPref(UiPreferences.KEY_TERMUX_ENABLED, enabled)
     }
 
+    /**
+     * Explicit Termux variant package override, or blank for auto-detect
+     * (prefers Involvex Termux when installed, otherwise stock Termux).
+     */
+    fun getTermuxVariantPackage(): String =
+        prefs.getString(UiPreferences.KEY_TERMUX_VARIANT_PACKAGE, "").orEmpty()
+
+    fun setTermuxVariantPackage(packageName: String) {
+        prefs.edit().putString(UiPreferences.KEY_TERMUX_VARIANT_PACKAGE, packageName).apply()
+    }
+
     fun getTermuxExecutionMode(): String =
         prefs.getString(UiPreferences.KEY_TERMUX_EXECUTION_MODE, "background") ?: "background"
 
@@ -1510,6 +1521,7 @@ class UiPreferences(
         const val KEY_TERMUX_EXECUTION_MODE = "termux_execution_mode"
         const val KEY_TERMUX_PREFIX = "termux_prefix"
         const val KEY_TERMUX_SAVED_COMMANDS = "termux_saved_commands"
+        const val KEY_TERMUX_VARIANT_PACKAGE = "termux_variant_package"
 
         // Rate Quick Search prompt keys
         const val KEY_FIRST_APP_OPEN_TIME = "first_app_open_time"

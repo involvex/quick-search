@@ -30,6 +30,7 @@ enum class SettingsDetailType {
     DATE_CALCULATOR_INFO,
     CUSTOM_TOOL_EDITOR,
     TASKER_INTEGRATION,
+    TERMUX_INTEGRATION,
     NICKNAMES,
     TRIGGERS,
     GESTURES,
@@ -178,6 +179,12 @@ internal object SettingsDestinationRegistry {
             SettingsDetailType.TASKER_INTEGRATION to
                 SettingsDestinationSpec(
                     titleResId = R.string.tasker_integration_title,
+                    level = 3,
+                    fallbackBackDestination = SettingsDetailType.TOOLS,
+                ),
+            SettingsDetailType.TERMUX_INTEGRATION to
+                SettingsDestinationSpec(
+                    titleResId = R.string.termux_settings_title,
                     level = 3,
                     fallbackBackDestination = SettingsDetailType.TOOLS,
                 ),

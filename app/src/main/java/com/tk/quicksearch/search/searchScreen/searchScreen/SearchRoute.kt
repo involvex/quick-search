@@ -480,6 +480,17 @@ fun SearchRoute(
             null
         }
 
+    val termuxPermissionLauncher =
+        if (context is android.app.Activity) {
+            rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission(),
+            ) { isGranted ->
+                viewModel.onTermuxPermissionResult(isGranted)
+            }
+        } else {
+            null
+        }
+
     val isAppSettingToggleChecked: (AppSettingResult) -> Boolean = { setting ->
         setting.toggleKey?.let { toggleKey -> uiState.isAppSettingToggleEnabled(toggleKey) } ?: false
     }
@@ -1149,6 +1160,9 @@ fun SearchRoute(
             onCustomToolSearchClick = viewModel::executeCustomToolSearch,
             onTaskerIntentClick = viewModel::executeTaskerIntent,
             onTermuxExecute = viewModel::executeTermuxCommand,
+            onTermuxGrantPermission = {
+                termuxPermissionLauncher?.launch(viewModel.getTermuxRunCommandPermission())
+            },
             onOpenToolsSettings = onOpenToolsSettings,
             onOpenCustomToolSettings = onOpenCustomToolSettings,
             onWelcomeAnimationCompleted = onWelcomeAnimationCompleted,

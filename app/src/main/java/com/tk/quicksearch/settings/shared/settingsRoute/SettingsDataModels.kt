@@ -26,6 +26,8 @@ import com.tk.quicksearch.settings.settingsDetailScreen.AiBackedToolConfigId
 import com.tk.quicksearch.tools.aiSearch.AiSearchLlmProviderId
 import com.tk.quicksearch.tools.aiSearch.GeminiTextModel
 import com.tk.quicksearch.tools.tasker.TaskerIntentTool
+import com.tk.quicksearch.search.core.TermuxExecutionMode
+import com.tk.quicksearch.search.core.TermuxSavedCommand
 
 /**
  * Data class to hold all settings screen state and callbacks. Reduces parameter count and improves
@@ -109,6 +111,11 @@ data class SettingsScreenState(
     val customTools: List<CustomTool> = emptyList(),
     val disabledCustomToolIds: Set<String> = emptySet(),
     val taskerIntentTools: List<TaskerIntentTool> = emptyList(),
+    val termuxSavedCommands: List<TermuxSavedCommand> = emptyList(),
+    val termuxIntegrationEnabled: Boolean = true,
+    val termuxPrefix: String = "$",
+    val termuxDefaultExecutionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
+    val termuxVariantPackage: String = "",
     val appSuggestionsEnabled: Boolean,
     val enabledAppSuggestionTabs: Set<AppSuggestionTabType> = AppSuggestionTabType.DefaultEnabledTabs,
     val webSuggestionsEnabled: Boolean,
@@ -263,6 +270,11 @@ data class SettingsScreenState(
                 customTools = customTools,
                 disabledCustomToolIds = disabledCustomToolIds,
                 taskerIntentTools = taskerIntentTools,
+                termuxSavedCommands = termuxSavedCommands,
+                termuxIntegrationEnabled = termuxIntegrationEnabled,
+                termuxPrefix = termuxPrefix,
+                termuxDefaultExecutionMode = termuxDefaultExecutionMode,
+                termuxVariantPackage = termuxVariantPackage,
             )
 
     val appShortcuts: AppShortcutsSettingsState
@@ -364,6 +376,12 @@ data class SettingsScreenCallbacks(
     val onDeleteCustomTool: (String) -> Unit,
     val onAddTaskerIntentTool: (String, String, String) -> Unit,
     val onDeleteTaskerIntentTool: (String) -> Unit,
+    val onAddTermuxSavedCommand: (alias: String, name: String, command: String, mode: TermuxExecutionMode) -> Unit,
+    val onDeleteTermuxSavedCommand: (String) -> Unit,
+    val onSetTermuxEnabled: (Boolean) -> Unit,
+    val onSetTermuxPrefix: (String) -> Unit,
+    val onSetTermuxExecutionMode: (TermuxExecutionMode) -> Unit,
+    val onSetTermuxVariantPackage: (String) -> Unit,
     val onToggleCustomTool: (String, Boolean) -> Unit,
     val onToggleAppSuggestions: (Boolean) -> Unit,
     val onToggleWebSuggestions: (Boolean) -> Unit,
@@ -622,6 +640,11 @@ data class ToolsSettingsState(
     val customTools: List<CustomTool> = emptyList(),
     val disabledCustomToolIds: Set<String> = emptySet(),
     val taskerIntentTools: List<TaskerIntentTool> = emptyList(),
+    val termuxSavedCommands: List<TermuxSavedCommand> = emptyList(),
+    val termuxIntegrationEnabled: Boolean = true,
+    val termuxPrefix: String = "$",
+    val termuxDefaultExecutionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
+    val termuxVariantPackage: String = "",
 )
 
 data class AppShortcutsSettingsState(

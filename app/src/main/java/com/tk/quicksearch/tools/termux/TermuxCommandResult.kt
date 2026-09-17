@@ -46,6 +46,7 @@ fun TermuxCommandResult(
     commandState: TermuxCommandState,
     showWallpaperBackground: Boolean = false,
     onExecute: () -> Unit = {},
+    onGrantPermission: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -177,11 +178,26 @@ fun TermuxCommandResult(
                     }
 
                     TermuxCommandStatus.PermissionError -> {
-                        Text(
-                            text = stringResource(R.string.termux_permission_error),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error,
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.termux_permission_error),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                            Text(
+                                text = stringResource(R.string.termux_setup_hint),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            Button(
+                                onClick = onGrantPermission,
+                                modifier = Modifier.align(Alignment.End),
+                            ) {
+                                Text(stringResource(R.string.termux_grant_permission))
+                            }
+                        }
                     }
 
                     TermuxCommandStatus.NotInstalled -> {

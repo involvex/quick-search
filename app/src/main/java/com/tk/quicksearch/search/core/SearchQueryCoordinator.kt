@@ -538,7 +538,6 @@ internal class SearchQueryCoordinator(
             aliasState.lockedCustomToolId != null ||
             aliasState.lockedTaskerIntentId != null ||
             aliasState.lockedTermuxCommand != null
-                    || aliasState.lockedTermuxCommand != null
             if (clearShortcutWhenBlank && hasLockedAliasMode && newQuery.isNotEmpty()) {
                 cancelAppSearch()
                 appSearchManager.setNoMatchPrefix(null)

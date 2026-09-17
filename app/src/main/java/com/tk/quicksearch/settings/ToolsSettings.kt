@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Construction
 import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.Terminal
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import com.tk.quicksearch.settings.shared.ToolToggleCardModel
 import com.tk.quicksearch.settings.shared.ToolToggleRows
 import com.tk.quicksearch.shared.ui.theme.DesignTokens
 import com.tk.quicksearch.tools.tasker.TaskerIntegration
+import com.tk.quicksearch.tools.termux.TermuxVariant
 
 @Composable
 fun ToolsSettingsSection(
@@ -41,6 +43,8 @@ fun ToolsSettingsSection(
         onNavigateToGeminiApiSetup: () -> Unit = {},
         showTaskerIntegration: Boolean = false,
         onNavigateToTaskerIntegration: () -> Unit = {},
+        showTermuxIntegration: Boolean = false,
+        onNavigateToTermuxIntegration: () -> Unit = {},
         customTools: List<CustomTool> = emptyList(),
         disabledCustomToolIds: Set<String> = emptySet(),
         customToolAliases: Map<String, String> = emptyMap(),
@@ -53,6 +57,8 @@ fun ToolsSettingsSection(
                 androidx.compose.foundation.rememberScrollState(),
 ) {
     val taskerIcon = rememberAppIcon(TaskerIntegration.PACKAGE_NAME).bitmap
+    val termuxIcon = rememberAppIcon(TermuxVariant.STOCK.packageName).bitmap
+        ?: rememberAppIcon(TermuxVariant.INVOLVEX.packageName).bitmap
 
     Column(
             modifier =
@@ -94,6 +100,23 @@ fun ToolsSettingsSection(
                             icon = Icons.Rounded.Bolt,
                             iconBitmap = taskerIcon,
                             actionOnPress = onNavigateToTaskerIntegration,
+                        ),
+                        contentPadding = PaddingValues(
+                            horizontal = DesignTokens.CardHorizontalPadding,
+                            vertical = DesignTokens.CardVerticalPadding,
+                        ),
+                    )
+                }
+            }
+            if (showTermuxIntegration) {
+                SettingsCard(modifier = Modifier.fillMaxWidth()) {
+                    SettingsNavigationRow(
+                        item = SettingsCardItem(
+                            title = stringResource(R.string.termux_settings_title),
+                            description = stringResource(R.string.termux_settings_description),
+                            icon = Icons.Rounded.Terminal,
+                            iconBitmap = termuxIcon,
+                            actionOnPress = onNavigateToTermuxIntegration,
                         ),
                         contentPadding = PaddingValues(
                             horizontal = DesignTokens.CardHorizontalPadding,

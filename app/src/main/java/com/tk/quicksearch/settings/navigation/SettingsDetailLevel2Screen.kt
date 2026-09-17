@@ -45,7 +45,9 @@ import com.tk.quicksearch.search.data.UserAppPreferences
 import com.tk.quicksearch.settings.settingsDetailScreen.GesturesSettingsSection
 import com.tk.quicksearch.searchEngines.AliasHandler
 import com.tk.quicksearch.settings.tasker.TaskerIntegrationScreen
+import com.tk.quicksearch.settings.termux.TermuxIntegrationScreen
 import com.tk.quicksearch.tools.tasker.TaskerIntegration
+import com.tk.quicksearch.tools.termux.TermuxVariant
 import com.tk.quicksearch.search.data.AppShortcutRepository.StaticShortcut
 import com.tk.quicksearch.shared.permissions.PermissionHelper
 import com.tk.quicksearch.settings.AppShortcutsSettings.AppShortcutSource
@@ -428,6 +430,12 @@ internal fun SettingsDetailLevel2Screen(
                             onNavigateToTaskerIntegration = {
                                 onNavigateToDetail(SettingsDetailType.TASKER_INTEGRATION)
                             },
+                            showTermuxIntegration = remember(context) {
+                                TermuxVariant.installedVariants(context).isNotEmpty()
+                            },
+                            onNavigateToTermuxIntegration = {
+                                onNavigateToDetail(SettingsDetailType.TERMUX_INTEGRATION)
+                            },
                             customTools = state.customTools,
                             disabledCustomToolIds = state.disabledCustomToolIds,
                             customToolAliases = state.shortcutCodes,
@@ -455,6 +463,30 @@ internal fun SettingsDetailLevel2Screen(
                     existingAliases = state.shortcutCodes,
                     onAdd = callbacks.onAddTaskerIntentTool,
                     onDelete = callbacks.onDeleteTaskerIntentTool,
+                    modifier = Modifier
+                        .settingsContentWidth()
+                        .fillMaxHeight()
+                        .align(Alignment.CenterHorizontally)
+                        .padding(
+                            start = DesignTokens.ContentHorizontalPadding,
+                            end = DesignTokens.ContentHorizontalPadding,
+                            bottom = DesignTokens.SectionTopPadding,
+                        ),
+                )
+            } else if (detailType == SettingsDetailType.TERMUX_INTEGRATION) {
+                TermuxIntegrationScreen(
+                    enabled = state.termuxIntegrationEnabled,
+                    prefix = state.termuxPrefix,
+                    defaultExecutionMode = state.termuxDefaultExecutionMode,
+                    savedCommands = state.termuxSavedCommands,
+                    existingAliases = state.shortcutCodes,
+                    variantPackageOverride = state.termuxVariantPackage,
+                    onSetEnabled = callbacks.onSetTermuxEnabled,
+                    onSetPrefix = callbacks.onSetTermuxPrefix,
+                    onSetExecutionMode = callbacks.onSetTermuxExecutionMode,
+                    onSetVariantPackage = callbacks.onSetTermuxVariantPackage,
+                    onAddCommand = callbacks.onAddTermuxSavedCommand,
+                    onDeleteCommand = callbacks.onDeleteTermuxSavedCommand,
                     modifier = Modifier
                         .settingsContentWidth()
                         .fillMaxHeight()

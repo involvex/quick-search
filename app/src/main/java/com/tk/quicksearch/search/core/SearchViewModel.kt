@@ -758,9 +758,26 @@ class SearchViewModel(
             )
         }
 
-        if (handler.isTermuxInstalled() && handler.hasRunCommandPermission()) {
+        // Foreground execution hands off to the Termux app, so the query can go.
+        // Background execution keeps the query so the Loading/Success card stays visible.
+        if (handler.isTermuxInstalled() && handler.hasRunCommandPermission() &&
+            userPreferences.getTermuxDefaultExecutionMode() == TermuxExecutionMode.FOREGROUND
+        ) {
             clearQuery()
         }
+    }
+
+    /** Dangerous RUN_COMMAND permission of the currently selected Termux variant. */
+    fun getTermuxRunCommandPermission(): String =
+        handlers.termuxCommandHandler.runCommandPermission()
+
+    /**
+     * Called after the runtime permission dialog for the Termux RUN_COMMAND
+     * permission. Retries the pending command when granted; otherwise the card
+     * keeps showing the PermissionError state with manual setup guidance.
+     */
+    fun onTermuxPermissionResult(granted: Boolean) {
+        if (granted) executeTermuxCommand()
     }
 
     fun addTermuxSavedCommand(alias: String, name: String, command: String, executionMode: TermuxExecutionMode) {
@@ -822,6 +839,11 @@ class SearchViewModel(
     fun setTermuxIntegrationEnabled(enabled: Boolean) {
         userPreferences.setTermuxIntegrationEnabled(enabled)
         updateFeatureState { it.copy(termuxIntegrationEnabled = enabled) }
+    }
+
+    fun setTermuxVariantPackage(packageName: String) {
+        userPreferences.setTermuxVariantPackage(packageName)
+        updateFeatureState { it.copy(termuxVariantPackage = packageName) }
     }
 
     fun activateSearchSectionFilter(section: SearchSection) =

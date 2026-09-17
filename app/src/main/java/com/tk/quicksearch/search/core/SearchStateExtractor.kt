@@ -140,6 +140,7 @@ internal object SearchStateExtractor {
             termuxIntegrationEnabled = s.termuxIntegrationEnabled,
             termuxDefaultExecutionMode = s.termuxDefaultExecutionMode,
             termuxPrefix = s.termuxPrefix,
+            termuxVariantPackage = s.termuxVariantPackage,
             recentQueriesEnabled = s.recentQueriesEnabled,
             recentQueriesDisplayCount = s.recentQueriesDisplayCount,
             appResultRowCount = s.appResultRowCount,

@@ -2,6 +2,7 @@ package com.tk.quicksearch.tools.termux
 
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.ContextCompat
 import com.tk.quicksearch.search.core.TermuxCommandState
 import com.tk.quicksearch.search.core.TermuxCommandStatus
 import com.tk.quicksearch.search.core.TermuxExecutionMode
@@ -11,30 +12,18 @@ class TermuxCommandHandler(
     private val context: Context,
     private val userPreferences: UserAppPreferences,
 ) {
-    companion object {
-        const val TERMUX_PACKAGE = "com.termux"
-        private const val RUN_COMMAND_SERVICE = "com.termux.app.RunCommandService"
-        private const val RUN_COMMAND_ACTION = "com.termux.RUN_COMMAND"
-        private const val EXTRA_RUN_COMMAND_PATH = "com.termux.RUN_COMMAND_PATH"
-        private const val EXTRA_RUN_COMMAND_ARGUMENTS = "com.termux.RUN_COMMAND_ARGUMENTS"
-        private const val EXTRA_RUN_COMMAND_WORKDIR = "com.termux.RUN_COMMAND_WORKDIR"
-        private const val EXTRA_RUN_COMMAND_BACKGROUND = "com.termux.RUN_COMMAND_BACKGROUND"
-        private const val EXTRA_RUN_COMMAND_SESSION_ACTION = "com.termux.RUN_COMMAND_SESSION_ACTION"
-        private const val EXTRA_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"
-        private const val TERMUX_HOME = "/data/data/com.termux/files/home"
-        private const val BASH_PATH = "/data/data/com.termux/files/usr/bin/bash"
-    }
+    /** Variant currently selected via preferences/auto-detect. Never cached. */
+    fun selectedVariant(): TermuxVariant =
+        TermuxVariant.resolve(context, userPreferences.getTermuxVariantPackage())
 
-    fun isTermuxInstalled(): Boolean =
-        runCatching {
-            context.packageManager.getPackageInfo(TERMUX_PACKAGE, 0)
-        }.isSuccess
+    fun installedVariants(): List<TermuxVariant> = TermuxVariant.installedVariants(context)
 
-    fun hasRunCommandPermission(): Boolean =
-        context.packageManager.checkPermission(
-            "com.termux.permission.RUN_COMMAND",
-            context.packageName,
-        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    fun isTermuxInstalled(): Boolean = selectedVariant().isInstalled(context)
+
+    fun hasRunCommandPermission(): Boolean = selectedVariant().hasRunCommandPermission(context)
+
+    /** Dangerous permission of the selected variant; must be granted at runtime. */
+    fun runCommandPermission(): String = selectedVariant().runCommandPermission
 
     fun buildIdleState(
         command: String,
@@ -50,9 +39,10 @@ class TermuxCommandHandler(
         command: String,
         onResult: (TermuxCommandState) -> Unit,
     ): TermuxCommandState {
+        val variant = selectedVariant()
         val executionMode = userPreferences.getTermuxDefaultExecutionMode()
 
-        if (!isTermuxInstalled()) {
+        if (!variant.isInstalled(context)) {
             return TermuxCommandState(
                 status = TermuxCommandStatus.NotInstalled,
                 command = command,
@@ -60,7 +50,7 @@ class TermuxCommandHandler(
             )
         }
 
-        if (!hasRunCommandPermission()) {
+        if (!variant.hasRunCommandPermission(context)) {
             return TermuxCommandState(
                 status = TermuxCommandStatus.PermissionError,
                 command = command,
@@ -97,24 +87,32 @@ class TermuxCommandHandler(
             }
         }
 
+        val trimmedCommand = command.trim()
         val intent = Intent().apply {
-            setClassName(TERMUX_PACKAGE, RUN_COMMAND_SERVICE)
-            action = RUN_COMMAND_ACTION
-            putExtra(EXTRA_RUN_COMMAND_PATH, BASH_PATH)
-            putExtra(EXTRA_RUN_COMMAND_ARGUMENTS, arrayOf("-c", command.trim()))
-            putExtra(EXTRA_RUN_COMMAND_WORKDIR, TERMUX_HOME)
-            putExtra(EXTRA_RUN_COMMAND_BACKGROUND, isBackground)
-            putExtra(EXTRA_RUN_COMMAND_SESSION_ACTION, "0")
+            setClassName(variant.packageName, variant.serviceClassName)
+            action = variant.runCommandAction
+            putExtra(variant.extraKey("RUN_COMMAND_PATH"), variant.bashPath(context))
+            putExtra(variant.extraKey("RUN_COMMAND_ARGUMENTS"), arrayOf("-c", trimmedCommand))
+            putExtra(variant.extraKey("RUN_COMMAND_WORKDIR"), variant.homePath(context))
+            putExtra(variant.extraKey("RUN_COMMAND_BACKGROUND"), isBackground)
+            putExtra(variant.extraKey("RUN_COMMAND_SESSION_ACTION"), "0")
+            putExtra(variant.extraKey("RUN_COMMAND_COMMAND_LABEL"), "Quick Search")
+            putExtra(
+                variant.extraKey("RUN_COMMAND_COMMAND_DESCRIPTION"),
+                trimmedCommand.take(COMMAND_DESCRIPTION_MAX_LENGTH),
+            )
             if (isBackground) {
                 putExtra(
-                    EXTRA_PENDING_INTENT,
+                    variant.extraKey("RUN_COMMAND_PENDING_INTENT"),
                     TermuxResultReceiver.createPendingIntent(context),
                 )
             }
         }
 
         return try {
-            context.startService(intent)
+            // RunCommandService runs as a foreground service on API 26+; use the
+            // compat helper so the start also works from background surfaces.
+            ContextCompat.startForegroundService(context, intent)
             TermuxCommandState(
                 status = TermuxCommandStatus.Loading,
                 command = command,
@@ -128,5 +126,9 @@ class TermuxCommandHandler(
                 errorMessage = e.message ?: "Failed to start Termux service",
             )
         }
+    }
+
+    companion object {
+        private const val COMMAND_DESCRIPTION_MAX_LENGTH = 200
     }
 }

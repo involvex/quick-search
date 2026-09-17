@@ -110,6 +110,11 @@ internal fun SearchUiState.toSettingsScreenState(): SettingsScreenState {
         customTools = tools.customTools,
         disabledCustomToolIds = tools.disabledCustomToolIds,
         taskerIntentTools = tools.taskerIntentTools,
+        termuxSavedCommands = tools.termuxSavedCommands,
+        termuxIntegrationEnabled = tools.termuxIntegrationEnabled,
+        termuxPrefix = tools.termuxPrefix,
+        termuxDefaultExecutionMode = tools.termuxDefaultExecutionMode,
+        termuxVariantPackage = tools.termuxVariantPackage,
         allAppShortcuts = appShortcuts.allAppShortcuts,
         allDeviceSettings = appShortcuts.allDeviceSettings,
         allApps = appShortcuts.allApps,
@@ -338,6 +343,11 @@ private data class ToolsMapperState(
     val customTools: List<CustomTool>,
     val disabledCustomToolIds: Set<String>,
     val taskerIntentTools: List<com.tk.quicksearch.tools.tasker.TaskerIntentTool>,
+    val termuxSavedCommands: List<com.tk.quicksearch.search.core.TermuxSavedCommand>,
+    val termuxIntegrationEnabled: Boolean,
+    val termuxPrefix: String,
+    val termuxDefaultExecutionMode: com.tk.quicksearch.search.core.TermuxExecutionMode,
+    val termuxVariantPackage: String,
 )
 
 private fun SearchUiState.toToolsSettingsState() =
@@ -353,6 +363,11 @@ private fun SearchUiState.toToolsSettingsState() =
         customTools = customTools,
         disabledCustomToolIds = disabledCustomToolIds,
         taskerIntentTools = taskerIntentTools,
+        termuxSavedCommands = termuxSavedCommands,
+        termuxIntegrationEnabled = termuxIntegrationEnabled,
+        termuxPrefix = termuxPrefix,
+        termuxDefaultExecutionMode = termuxDefaultExecutionMode,
+        termuxVariantPackage = termuxVariantPackage,
     )
 
 private data class AppShortcutsMapperState(
