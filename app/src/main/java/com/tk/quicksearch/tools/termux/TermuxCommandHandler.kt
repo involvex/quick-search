@@ -37,10 +37,10 @@ class TermuxCommandHandler(
 
     fun executeCommand(
         command: String,
+        executionMode: TermuxExecutionMode = userPreferences.getTermuxDefaultExecutionMode(),
         onResult: (TermuxCommandState) -> Unit,
     ): TermuxCommandState {
         val variant = selectedVariant()
-        val executionMode = userPreferences.getTermuxDefaultExecutionMode()
 
         if (!variant.isInstalled(context)) {
             return TermuxCommandState(
@@ -113,6 +113,9 @@ class TermuxCommandHandler(
             // RunCommandService runs as a foreground service on API 26+; use the
             // compat helper so the start also works from background surfaces.
             ContextCompat.startForegroundService(context, intent)
+            if (!isBackground) {
+                openTermuxApp(variant)
+            }
             TermuxCommandState(
                 status = TermuxCommandStatus.Loading,
                 command = command,
@@ -125,6 +128,20 @@ class TermuxCommandHandler(
                 executionMode = executionMode,
                 errorMessage = e.message ?: "Failed to start Termux service",
             )
+        }
+    }
+
+    /**
+     * Brings the Termux app to the foreground so a foreground-mode command is
+     * actually visible. The RUN_COMMAND intent alone only starts the session;
+     * without this the handoff looks like nothing happened.
+     */
+    private fun openTermuxApp(variant: TermuxVariant) {
+        runCatching {
+            val launch =
+                context.packageManager.getLaunchIntentForPackage(variant.packageName) ?: return
+            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(launch)
         }
     }
 

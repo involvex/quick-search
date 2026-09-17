@@ -140,11 +140,13 @@ fun CustomToolEditorScreen(
 
     val showThinkingToggle =
         selectedProviderInput != AiSearchLlmProviderId.OPENAI &&
+            selectedProviderInput != AiSearchLlmProviderId.KILO &&
             !selectedProviderInput.isCustom
     val showGroundingCheckbox =
         selectedProviderInput != AiSearchLlmProviderId.OPENAI &&
             !selectedProviderInput.isCustom &&
-            selectedProviderInput != AiSearchLlmProviderId.GROQ
+            selectedProviderInput != AiSearchLlmProviderId.GROQ &&
+            selectedProviderInput != AiSearchLlmProviderId.KILO
     val supportsAdvancedPayload = selectedProviderInput.isCustom
 
     val isNameValid = !showNameInput || nameInput.trim().isNotBlank()

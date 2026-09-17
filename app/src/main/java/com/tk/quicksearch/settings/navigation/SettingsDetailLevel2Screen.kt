@@ -849,9 +849,11 @@ internal fun SettingsDetailLevel2Screen(
                                     showGroundingCheckbox =
                                         state.aiSearchLlmProviderId != AiSearchLlmProviderId.OPENAI &&
                                             !state.aiSearchLlmProviderId.isCustom &&
-                                            state.aiSearchLlmProviderId != AiSearchLlmProviderId.GROQ,
+                                            state.aiSearchLlmProviderId != AiSearchLlmProviderId.GROQ &&
+                                            state.aiSearchLlmProviderId != AiSearchLlmProviderId.KILO,
                                     showThinkingCheckbox =
                                         state.aiSearchLlmProviderId != AiSearchLlmProviderId.OPENAI &&
+                                            state.aiSearchLlmProviderId != AiSearchLlmProviderId.KILO &&
                                             !state.aiSearchLlmProviderId.isCustom,
                                     onRequestScrollToBottom = {
                                         coroutineScope.launch {

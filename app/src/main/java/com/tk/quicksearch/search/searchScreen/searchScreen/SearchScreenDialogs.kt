@@ -209,7 +209,8 @@ internal fun SearchScreenDialogLogic(
             showGroundingToggle =
                 state.aiSearchLlmProviderId != AiSearchLlmProviderId.OPENAI &&
                     !state.aiSearchLlmProviderId.isCustom &&
-                    state.aiSearchLlmProviderId != AiSearchLlmProviderId.GROQ,
+                    state.aiSearchLlmProviderId != AiSearchLlmProviderId.GROQ &&
+                    state.aiSearchLlmProviderId != AiSearchLlmProviderId.KILO,
             selectedProviderId = state.aiSearchLlmProviderId,
         )
     }

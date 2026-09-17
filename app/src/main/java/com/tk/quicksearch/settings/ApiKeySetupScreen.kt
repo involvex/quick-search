@@ -525,6 +525,13 @@ private fun ProviderLogo(
                 )
             }
         }
+        AiSearchLlmProviderId.KILO -> {
+            Text(
+                text = stringResource(R.string.settings_ai_provider_kilo),
+                style = MaterialTheme.typography.titleMedium,
+                color = contentColor,
+            )
+        }
         else -> {
             Text(
                 text = stringResource(R.string.common_custom),

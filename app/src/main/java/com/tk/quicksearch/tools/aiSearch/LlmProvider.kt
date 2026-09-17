@@ -47,7 +47,8 @@ data class AiSearchLlmProviderId(
         val ANTHROPIC = AiSearchLlmProviderId("anthropic")
         val GROQ = AiSearchLlmProviderId("groq")
         val META = AiSearchLlmProviderId("meta")
-        val entries = listOf(GEMINI, OPENAI, ANTHROPIC, GROQ, META)
+        val KILO = AiSearchLlmProviderId("kilo")
+        val entries = listOf(GEMINI, OPENAI, ANTHROPIC, GROQ, META, KILO)
 
         fun custom(id: String): AiSearchLlmProviderId =
             AiSearchLlmProviderId("$CUSTOM_PREFIX${id.trim()}")
@@ -116,6 +117,7 @@ object AiSearchLlmProviderRegistry {
             AiSearchLlmProviderId.ANTHROPIC -> AnthropicAiSearchLlmProvider
             AiSearchLlmProviderId.GROQ -> GroqAiSearchLlmProvider
             AiSearchLlmProviderId.META -> MetaAiSearchLlmProvider
+            AiSearchLlmProviderId.KILO -> KiloAiSearchLlmProvider
             else -> GeminiAiSearchLlmProvider
         }
     }

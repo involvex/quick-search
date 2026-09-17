@@ -294,7 +294,7 @@ data class TermuxCommandState(
         val executionMode: TermuxExecutionMode = TermuxExecutionMode.BACKGROUND,
         val errorMessage: String? = null,
 ) {
-        val isActive: Boolean get() = command != null && status != TermuxCommandStatus.Idle
+        val isActive: Boolean get() = command != null
 }
 
 enum class TermuxExecutionMode {
@@ -712,6 +712,7 @@ data class SearchUiState(
         val detectedTaskerIntentId: String? = null,
         val detectedTermuxCommandId: String? = null,
         val termuxCommandState: TermuxCommandState = TermuxCommandState(),
+        val termuxSuggestions: List<TermuxSavedCommand> = emptyList(),
         val webSuggestionWasSelected: Boolean = false,
         // Onboarding / hints
         val showSearchEngineOnboarding: Boolean = false,
@@ -831,6 +832,7 @@ fun SearchUiState(
                 detectedTaskerIntentId = results.detectedTaskerIntentId,
                 detectedTermuxCommandId = results.detectedTermuxCommandId,
                 termuxCommandState = results.termuxCommandState,
+                termuxSuggestions = results.termuxSuggestions,
                 recentItems = results.recentItems,
                 aliasRecentItems = results.aliasRecentItems,
                 recentResultRecencyIndex = results.recentResultRecencyIndex,

@@ -142,6 +142,7 @@ class AliasHandler(
         TOOL_ALIAS_IDS.forEach(::loadToolAlias)
         loadCustomToolAliases()
         loadTaskerIntentAliases()
+        loadTermuxCommandAliases()
 
         SEARCH_SECTION_ALIAS_IDS.forEach { sectionAliasId ->
             val aliasCode = userPreferences.getAliasCodeAllowSingleChar(sectionAliasId).orEmpty()
@@ -175,6 +176,18 @@ class AliasHandler(
             val normalized = if (isValidGeneralAliasCode(alias)) normalizeShortcutCodeInput(alias) else ""
             aliasCodes = aliasCodes.toMutableMap().apply { put(tool.id, normalized) }
             aliasEnabled = aliasEnabled.toMutableMap().apply { put(tool.id, normalized.isNotEmpty()) }
+        }
+    }
+
+    private fun loadTermuxCommandAliases() {
+        if (!userPreferences.isTermuxIntegrationEnabled()) return
+        userPreferences.getTermuxSavedCommands().forEach { command ->
+            val storedAlias = userPreferences.getAliasCode(command.id).orEmpty().trim()
+            val embeddedAlias = command.aliasCode.trim()
+            val alias = storedAlias.ifEmpty { embeddedAlias }
+            val normalized = if (isValidGeneralAliasCode(alias)) normalizeShortcutCodeInput(alias) else ""
+            aliasCodes = aliasCodes.toMutableMap().apply { put(command.id, normalized) }
+            aliasEnabled = aliasEnabled.toMutableMap().apply { put(command.id, normalized.isNotEmpty()) }
         }
     }
 
@@ -361,6 +374,7 @@ class AliasHandler(
         collectLeadingSectionAliases(aliases)
         collectLeadingCustomToolAliases(aliases)
         collectLeadingTaskerIntentAliases(aliases)
+        collectLeadingTermuxCommandAliases(aliases)
         val match = AliasParser.detectPrefixAlias(query, aliases) ?: return null
         return Pair(match.queryWithoutAlias, match.target)
     }
@@ -438,6 +452,15 @@ class AliasHandler(
         if (!isTaskerInstalled()) return
         aliasCodes.forEach { (id, alias) ->
             if (id.startsWith("tasker_intent:") && alias.isNotEmpty() && aliasEnabled[id] == true) {
+                aliases[alias.lowercase(Locale.getDefault())] = AliasTarget.Feature(id)
+            }
+        }
+    }
+
+    private fun collectLeadingTermuxCommandAliases(aliases: MutableMap<String, AliasTarget>) {
+        if (!userPreferences.isTermuxIntegrationEnabled()) return
+        aliasCodes.forEach { (id, alias) ->
+            if (id.startsWith("termux_cmd:") && alias.isNotEmpty() && aliasEnabled[id] == true) {
                 aliases[alias.lowercase(Locale.getDefault())] = AliasTarget.Feature(id)
             }
         }

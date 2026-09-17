@@ -6,6 +6,7 @@ import com.tk.quicksearch.search.utils.SearchQueryContext
 import com.tk.quicksearch.search.utils.SearchTextNormalizer
 import com.tk.quicksearch.searchEngines.AliasHandler
 import com.tk.quicksearch.searchEngines.AliasTarget
+import com.tk.quicksearch.tools.termux.TermuxSuggestionMatcher
 import java.util.concurrent.atomic.AtomicLong
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +25,7 @@ internal data class SearchQueryAliasState(
     val lockedCustomToolId: String? = null,
     val lockedTaskerIntentId: String? = null,
     val lockedTermuxCommand: String? = null,
+    val lockedTermuxExecutionMode: TermuxExecutionMode? = null,
 )
 
 internal class LatestSearchJobRunner<T>(
@@ -164,6 +166,73 @@ internal class SearchQueryCoordinator(
         if (query.isNotBlank()) onQueryChangeInternal(query, clearShortcutWhenBlank = false)
     }
 
+    fun selectTermuxSuggestion(commandId: String) {
+        val savedCommand =
+            userPreferences.getTermuxSavedCommands().find { it.id == commandId } ?: return
+        val current = aliasStateProvider()
+        updateAliasState(
+            current.copy(
+                lockedShortcutTarget = null,
+                lockedAliasSearchSection = null,
+                lockedToolMode = null,
+                lockedCurrencyConverterAlias = false,
+                lockedWorldClockAlias = false,
+                lockedDictionaryAlias = false,
+                lockedWeatherAlias = false,
+                lockedCustomToolId = null,
+                lockedTaskerIntentId = null,
+                lockedTermuxCommand = savedCommand.command,
+                lockedTermuxExecutionMode = savedCommand.executionMode,
+            ),
+        )
+        updateUiState { state ->
+            state.copy(
+                detectedTermuxCommandId = savedCommand.command,
+                termuxCommandState =
+                    TermuxCommandState(
+                        status = TermuxCommandStatus.Idle,
+                        command = savedCommand.command,
+                        executionMode = savedCommand.executionMode,
+                    ),
+                termuxSuggestions = emptyList(),
+                searchResults = emptyList(),
+                appShortcutResults = emptyList(),
+                contactResults = emptyList(),
+                fileResults = emptyList(),
+                settingResults = emptyList(),
+                appSettingResults = emptyList(),
+                calendarEvents = emptyList(),
+                noteResults = emptyList(),
+                webSuggestions = emptyList(),
+                webSuggestionsLoading = false,
+                calculatorState = CalculatorState(),
+            )
+        }
+    }
+
+    private fun resolveTermuxSuggestions(trimmedQuery: String): List<TermuxSavedCommand> {
+        if (trimmedQuery.isBlank() || !userPreferences.isTermuxIntegrationEnabled()) return emptyList()
+        val aliasState = aliasStateProvider()
+        if (aliasState.lockedTermuxCommand != null ||
+            aliasState.lockedShortcutTarget != null ||
+            aliasState.lockedAliasSearchSection != null ||
+            aliasState.lockedToolMode != null ||
+            aliasState.lockedCurrencyConverterAlias ||
+            aliasState.lockedWorldClockAlias ||
+            aliasState.lockedDictionaryAlias ||
+            aliasState.lockedWeatherAlias ||
+            aliasState.lockedCustomToolId != null ||
+            aliasState.lockedTaskerIntentId != null
+        ) {
+            return emptyList()
+        }
+        if (trimmedQuery.startsWith(userPreferences.getTermuxPrefix())) return emptyList()
+        return TermuxSuggestionMatcher.rankMatches(
+            trimmedQuery,
+            userPreferences.getTermuxSavedCommands(),
+        )
+    }
+
     fun clearDetectedShortcut() {
         clearDetectedAliasMode()
         updateUiState {
@@ -177,6 +246,7 @@ internal class SearchQueryCoordinator(
                 detectedCustomToolId = null,
                 detectedTaskerIntentId = null,
                 detectedTermuxCommandId = null,
+                termuxSuggestions = emptyList(),
                 termuxCommandState = TermuxCommandState(),
                 calculatorState = CalculatorState(),
                 currencyConverterState = CurrencyConverterState(),
@@ -219,6 +289,7 @@ internal class SearchQueryCoordinator(
                 lockedCustomToolId = if (isExclusive) null else current.lockedCustomToolId,
                 lockedTaskerIntentId = if (isExclusive) null else current.lockedTaskerIntentId,
                 lockedTermuxCommand = if (isExclusive) null else current.lockedTermuxCommand,
+                lockedTermuxExecutionMode = if (isExclusive) null else current.lockedTermuxExecutionMode,
             ),
         )
     }
@@ -312,8 +383,7 @@ internal class SearchQueryCoordinator(
             return
         }
         if (featureId.startsWith("termux_cmd:")) {
-            val commandId = featureId.removePrefix("termux_cmd:")
-            val savedCommand = userPreferences.getTermuxSavedCommands().find { it.id == commandId }
+            val savedCommand = userPreferences.getTermuxSavedCommands().find { it.id == featureId }
             if (savedCommand != null) {
                 val current = aliasStateProvider()
                 updateAliasState(
@@ -328,6 +398,7 @@ internal class SearchQueryCoordinator(
                         lockedCustomToolId = null,
                         lockedTaskerIntentId = null,
                         lockedTermuxCommand = savedCommand.command,
+                        lockedTermuxExecutionMode = savedCommand.executionMode,
                     ),
                 )
             }
@@ -574,6 +645,7 @@ internal class SearchQueryCoordinator(
                         detectedCustomToolId = aliasState.lockedCustomToolId,
                         detectedTaskerIntentId = aliasState.lockedTaskerIntentId,
                         detectedTermuxCommandId = aliasState.lockedTermuxCommand,
+                        termuxSuggestions = emptyList(),
                         webSuggestionWasSelected = false,
                     )
                 }
@@ -631,6 +703,7 @@ internal class SearchQueryCoordinator(
                         if (clearShortcutWhenBlank) null else updatedAliasState.lockedTaskerIntentId,
                     detectedTermuxCommandId =
                         if (clearShortcutWhenBlank) null else updatedAliasState.lockedTermuxCommand,
+                    termuxSuggestions = emptyList(),
                     webSuggestionWasSelected = false,
                 )
             }
@@ -669,6 +742,7 @@ internal class SearchQueryCoordinator(
             val command = trimmedQuery.removePrefix(termuxPrefix).trim()
             if (command.isNotEmpty()) {
                 val current = aliasStateProvider()
+                val defaultExecutionMode = userPreferences.getTermuxDefaultExecutionMode()
                 if (current.lockedTermuxCommand != command) {
                     updateAliasState(
                         current.copy(
@@ -682,6 +756,7 @@ internal class SearchQueryCoordinator(
                             lockedCustomToolId = null,
                             lockedTaskerIntentId = null,
                             lockedTermuxCommand = command,
+                            lockedTermuxExecutionMode = defaultExecutionMode,
                         ),
                     )
                 }
@@ -689,9 +764,11 @@ internal class SearchQueryCoordinator(
                     state.copy(
                         query = newQuery,
                         detectedTermuxCommandId = command,
+                        termuxSuggestions = emptyList(),
                         termuxCommandState = TermuxCommandState(
                             status = TermuxCommandStatus.Idle,
                             command = command,
+                            executionMode = defaultExecutionMode,
                         ),
                         searchResults = emptyList(),
                         appShortcutResults = emptyList(),
@@ -812,6 +889,7 @@ internal class SearchQueryCoordinator(
                 detectedCustomToolId = aliasState.lockedCustomToolId,
                 detectedTaskerIntentId = aliasState.lockedTaskerIntentId,
                 detectedTermuxCommandId = aliasState.lockedTermuxCommand,
+                termuxSuggestions = resolveTermuxSuggestions(trimmedQuery),
                 // Keep stale secondary results during debounce so cards don't flicker.
                 // When secondary search is not going to run (tool mode, alias mode, etc.),
                 // clear them immediately since the orchestrator won't clean them up.

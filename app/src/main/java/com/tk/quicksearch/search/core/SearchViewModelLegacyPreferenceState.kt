@@ -58,6 +58,7 @@ internal class SearchViewModelLegacyPreferenceState(
     var lockedCustomToolId: String? = null
     var lockedTaskerIntentId: String? = null
     var lockedTermuxCommand: String? = null
+    var lockedTermuxExecutionMode: TermuxExecutionMode? = null
     var clearQueryOnLaunch: Boolean = clearQueryOnLaunch
     var amazonDomain: String? = null
 

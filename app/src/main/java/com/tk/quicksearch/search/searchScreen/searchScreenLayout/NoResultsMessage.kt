@@ -47,6 +47,8 @@ internal fun computeShouldShowNoResults(state: SearchUiState): Boolean {
         !state.isWeatherAliasMode &&
         state.detectedCustomToolId == null &&
         state.detectedTaskerIntentId == null &&
+        state.detectedTermuxCommandId == null &&
+        state.termuxSuggestions.isEmpty() &&
         (
             !state.webSuggestionsEnabled ||
                 (queryLength >= 2 && state.webSuggestions.isEmpty())

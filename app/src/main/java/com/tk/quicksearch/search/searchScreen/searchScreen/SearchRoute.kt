@@ -1160,6 +1160,7 @@ fun SearchRoute(
             onCustomToolSearchClick = viewModel::executeCustomToolSearch,
             onTaskerIntentClick = viewModel::executeTaskerIntent,
             onTermuxExecute = viewModel::executeTermuxCommand,
+            onTermuxSuggestionClick = viewModel::selectTermuxSuggestion,
             onTermuxGrantPermission = {
                 termuxPermissionLauncher?.launch(viewModel.getTermuxRunCommandPermission())
             },

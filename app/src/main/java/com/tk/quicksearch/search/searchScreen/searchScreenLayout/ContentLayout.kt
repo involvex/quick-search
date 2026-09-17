@@ -129,6 +129,7 @@ fun ContentLayout(
     selectedTopMatchIndex: Int? = null,
     onTermuxExecute: () -> Unit = {},
     onTermuxGrantPermission: () -> Unit = {},
+    onTermuxSuggestionClick: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
     val userPreferences = remember(context) { UserAppPreferences(context) }
@@ -1072,6 +1073,12 @@ fun ContentLayout(
                             showWallpaperBackground = effectiveShowWallpaperBackground,
                             onExecute = onTermuxExecute,
                             onGrantPermission = onTermuxGrantPermission,
+                        )
+                    } else if (hasQuery && !hideResults && state.termuxSuggestions.isNotEmpty()) {
+                        com.tk.quicksearch.tools.termux.TermuxSuggestionList(
+                            suggestions = state.termuxSuggestions,
+                            showWallpaperBackground = effectiveShowWallpaperBackground,
+                            onSuggestionClick = onTermuxSuggestionClick,
                         )
                     }
                 }

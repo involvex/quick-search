@@ -69,6 +69,7 @@ internal object SearchStateExtractor {
             detectedTaskerIntentId = s.detectedTaskerIntentId,
             detectedTermuxCommandId = s.detectedTermuxCommandId,
             termuxCommandState = s.termuxCommandState,
+            termuxSuggestions = s.termuxSuggestions,
             recentItems = s.recentItems,
             aliasRecentItems = s.aliasRecentItems,
             recentResultRecencyIndex = s.recentResultRecencyIndex,

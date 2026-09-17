@@ -276,6 +276,13 @@ internal fun GeminiAttributionRow(
                     )
                 }
             }
+            AiSearchLlmProviderId.KILO -> {
+                Text(
+                        text = stringResource(R.string.settings_ai_provider_kilo),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = contentColor,
+                )
+            }
             else -> {
                 if (llmProviderId.isCustom) {
                     Text(

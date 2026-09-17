@@ -155,6 +155,7 @@ fun SearchContentArea(
     selectedTopMatchIndex: Int? = null,
     onTermuxExecute: () -> Unit = {},
     onTermuxGrantPermission: () -> Unit = {},
+    onTermuxSuggestionClick: (String) -> Unit = {},
 ) {
     val currentOnHomeDoubleTap by rememberUpdatedState(onHomeDoubleTap)
     val useOneHandedMode =
@@ -646,6 +647,7 @@ fun SearchContentArea(
                                 selectedTopMatchIndex = selectedTopMatchIndex,
                                 onTermuxExecute = onTermuxExecute,
                                 onTermuxGrantPermission = onTermuxGrantPermission,
+                                onTermuxSuggestionClick = onTermuxSuggestionClick,
                             )
                         }
                     }

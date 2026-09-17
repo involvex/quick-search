@@ -118,6 +118,7 @@ data class SearchResultsState(
         val detectedTaskerIntentId: String? = null,
         val detectedTermuxCommandId: String? = null,
         val termuxCommandState: TermuxCommandState = TermuxCommandState(),
+        val termuxSuggestions: List<TermuxSavedCommand> = emptyList(),
         // Recent items (shown when query is blank)
         val recentItems: List<RecentSearchItem> = emptyList(),
         // Recently opened items filtered to the active alias section (shown when alias detected + query blank)

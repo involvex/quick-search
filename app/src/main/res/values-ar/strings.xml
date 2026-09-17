@@ -793,6 +793,7 @@
     <string name="settings_add_search_engine_error_placeholder">يجب أن يحتوي الرابط على {{query}}</string>
     <string name="settings_add_search_engine_error_required">يرجى إدخال قالب رابط URL.</string>
     <string name="settings_ai_provider_groq">Groq</string>
+    <string name="settings_ai_provider_kilo">Kilo</string>
     <string name="settings_ai_provider_meta">Meta AI</string>
     <string name="settings_ai_provider_openai">OpenAI</string>
     <string name="settings_alias_label">الاسم المستعار:</string>
@@ -1155,6 +1156,10 @@
     <string name="speed_bump_overlay_title">خذ نفسًا عميقًا</string>
     <string name="speed_bump_title">SpeedBump</string>
     <string name="termux_grant_permission">Grant permission</string>
+    <string name="termux_presets_title">Command presets</string>
+    <string name="termux_preset_add">Add</string>
+    <string name="termux_preset_added">Added</string>
+    <string name="termux_preset_requires_api">Needs Termux:API app</string>
     <string name="termux_setup_hint">Grant the Run Command permission above. The Termux app must also allow external apps: enable “allow-external-apps” in its settings, otherwise every command is rejected.</string>
     <string name="termux_settings_status_title">Status</string>
     <string name="termux_settings_variant_title">Termux app</string>

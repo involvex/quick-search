@@ -197,6 +197,7 @@ internal fun SearchScreenContent(
         onTaskerIntentClick: () -> Unit = {},
         onTermuxExecute: () -> Unit = {},
         onTermuxGrantPermission: () -> Unit = {},
+        onTermuxSuggestionClick: (String) -> Unit = {},
         onKeyboardSwitchToggle: () -> Unit,
         onOverlayNumberKeyboardUiChanged: ((Boolean, Boolean) -> Unit)? = null,
         onOverlayExpandRequest: () -> Unit = {},
@@ -516,6 +517,7 @@ internal fun SearchScreenContent(
         }
     }
     val showTaskerIntentCard = activeTaskerIntent != null
+    val showTermuxCard = state.detectedTermuxCommandId != null
     val isToolAliasMode =
             isCurrencyConverterAliasMode ||
                     isWorldClockAliasMode ||
@@ -1204,6 +1206,10 @@ internal fun SearchScreenContent(
                         onTaskerIntentClick()
                         return@PersistentSearchBar true
                     }
+                    if (showTermuxCard) {
+                        onTermuxExecute()
+                        return@PersistentSearchBar true // keep keyboard open
+                    }
                     if (showWorldClockSearchCard) {
                         onWorldClockSearchClick()
                         return@PersistentSearchBar true // keep keyboard open
@@ -1506,6 +1512,7 @@ internal fun SearchScreenContent(
                 selectedTopMatchIndex = selectedTopMatchIndex,
                 onTermuxExecute = onTermuxExecute,
                 onTermuxGrantPermission = onTermuxGrantPermission,
+                onTermuxSuggestionClick = onTermuxSuggestionClick,
         )
 
         // Fixed search engines section at the bottom (above keyboard, not scrollable)

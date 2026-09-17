@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -359,6 +360,12 @@ fun TermuxIntegrationScreen(
                 ) {
                     Text(stringResource(R.string.termux_add_command_button))
                 }
+                TermuxPresetSection(
+                    savedCommands = savedCommands,
+                    onAddPreset = { preset ->
+                        onAddCommand(preset.alias, preset.name, preset.command, preset.executionMode)
+                    },
+                )
             }
         }
 
@@ -407,6 +414,68 @@ fun TermuxIntegrationScreen(
                             contentDescription = stringResource(R.string.termux_delete_command),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TermuxPresetSection(
+    savedCommands: List<TermuxSavedCommand>,
+    onAddPreset: (com.tk.quicksearch.tools.termux.TermuxCommandPreset) -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingSmall),
+    ) {
+        Text(
+            stringResource(R.string.termux_presets_title),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        com.tk.quicksearch.tools.termux.TERMUX_COMMAND_PRESETS.forEach { preset ->
+            val alreadyAdded =
+                remember(savedCommands, preset) {
+                    savedCommands.any {
+                        it.aliasCode.equals(preset.alias, ignoreCase = true) ||
+                            it.command == preset.command
+                    }
+                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(DesignTokens.SpacingMedium),
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(DesignTokens.SpacingXSmall),
+                ) {
+                    Text(
+                        preset.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        (preset.command +
+                            if (preset.requiresApiApp) {
+                                " · " + stringResource(R.string.termux_preset_requires_api)
+                            } else {
+                                ""
+                            }),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                if (alreadyAdded) {
+                    Text(
+                        stringResource(R.string.termux_preset_added),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                } else {
+                    TextButton(onClick = { onAddPreset(preset) }) {
+                        Text(stringResource(R.string.termux_preset_add))
                     }
                 }
             }

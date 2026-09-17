@@ -164,7 +164,7 @@ Long-press on most results to open a context menu with quick actions.
 - **Amazon Domain** - Select the Amazon region/domain used when searching via the Amazon engine. Updating this will open your Amazon queries within the installed app instead of the website.
 - **Custom Search Engines** - Add your own search engines by specifying a URL template with the {{query}} placeholder. The app automatically fetches the name and icon for the website, but you can choose to edit them if needed. Tapping on {{query}} in the error hint will add this string to your URL so that you don't have to type it. You can choose any installed browser to open custom search engine queries.
 - **AI Search** - Connect a Gemini API key to enable AI answers directly in Quick Search, view if a key is configured, and open the dedicated AI Search configuration screen. Gemini Flash Latest is the model which is chosen by default.
-- **AI Providers** - Configure API keys for multiple AI providers - Gemini, OpenAI, Claude, Groq, Meta AI - at the same time and switch models as needed.
+- **AI Providers** - Configure API keys for multiple AI providers - Gemini, OpenAI, Claude, Groq, Meta AI, Kilo - at the same time and switch models as needed.
 - **Custom AI Providers** - Add your own AI providers using any OpenAI-compatible API. Specify the base URL, API key, and model details to plug in self-hosted or third-party endpoints. Advanced users can also provide a custom JSON payload for full control over request parameters.
 
 ---

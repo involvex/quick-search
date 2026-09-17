@@ -243,6 +243,7 @@ private fun fallbackModels(providerId: AiSearchLlmProviderId): List<GeminiTextMo
         AiSearchLlmProviderId.ANTHROPIC -> AnthropicModelCatalog.FALLBACK_TEXT_MODELS
         AiSearchLlmProviderId.GROQ -> GroqModelCatalog.FALLBACK_TEXT_MODELS
         AiSearchLlmProviderId.META -> MetaModelCatalog.FALLBACK_TEXT_MODELS
+        AiSearchLlmProviderId.KILO -> KiloModelCatalog.FALLBACK_TEXT_MODELS
         else -> emptyList()
     }
 
@@ -253,6 +254,7 @@ private fun providerSortOrder(providerId: AiSearchLlmProviderId): Int =
         AiSearchLlmProviderId.ANTHROPIC -> 2
         AiSearchLlmProviderId.GROQ -> 3
         AiSearchLlmProviderId.META -> 4
+        AiSearchLlmProviderId.KILO -> 5
         else -> 5
     }
 
@@ -331,6 +333,13 @@ private fun ProviderWordmark(
                 )
             }
         }
+        AiSearchLlmProviderId.KILO -> {
+            Text(
+                text = stringResource(R.string.settings_ai_provider_kilo),
+                style = MaterialTheme.typography.labelMedium,
+                color = contentColor,
+            )
+        }
         else -> {
             Text(
                 text = stringResource(R.string.common_custom),
@@ -348,6 +357,7 @@ private fun providerSearchName(providerId: AiSearchLlmProviderId): String =
         AiSearchLlmProviderId.ANTHROPIC -> "Claude"
         AiSearchLlmProviderId.GROQ -> "Groq"
         AiSearchLlmProviderId.META -> "Meta AI"
+        AiSearchLlmProviderId.KILO -> "Kilo"
         else -> "Custom"
     }
 
