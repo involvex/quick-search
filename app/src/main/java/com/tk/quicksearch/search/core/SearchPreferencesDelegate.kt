@@ -115,6 +115,34 @@ internal class SearchPreferencesDelegate(
         }
     }
 
+    fun setBase64CodecEnabled(enabled: Boolean) {
+        scope.launch(Dispatchers.IO) {
+            userPreferences.setBase64CodecEnabled(enabled)
+            updateFeatureState { it.copy(base64CodecEnabled = enabled) }
+        }
+    }
+
+    fun setHashGeneratorEnabled(enabled: Boolean) {
+        scope.launch(Dispatchers.IO) {
+            userPreferences.setHashGeneratorEnabled(enabled)
+            updateFeatureState { it.copy(hashGeneratorEnabled = enabled) }
+        }
+    }
+
+    fun setUrlCodecEnabled(enabled: Boolean) {
+        scope.launch(Dispatchers.IO) {
+            userPreferences.setUrlCodecEnabled(enabled)
+            updateFeatureState { it.copy(urlCodecEnabled = enabled) }
+        }
+    }
+
+    fun setTimestampConverterEnabled(enabled: Boolean) {
+        scope.launch(Dispatchers.IO) {
+            userPreferences.setTimestampConverterEnabled(enabled)
+            updateFeatureState { it.copy(timestampConverterEnabled = enabled) }
+        }
+    }
+
     fun setCurrencyConverterEnabled(enabled: Boolean) {
         scope.launch(Dispatchers.IO) {
             userPreferences.setCurrencyConverterEnabled(enabled)

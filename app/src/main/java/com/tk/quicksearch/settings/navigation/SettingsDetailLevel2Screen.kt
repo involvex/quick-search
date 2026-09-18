@@ -331,7 +331,15 @@ internal fun SettingsDetailLevel2Screen(
                                                             state.dateCalculatorEnabled
                                                     ToolSettingId.COLOR_VISUALIZER ->
                                                             state.colorVisualizerEnabled
-                                                    ToolSettingId.CURRENCY_CONVERTER ->
+ToolSettingId.BASE64_CODEC ->
+                                                            state.base64CodecEnabled
+                                                        ToolSettingId.HASH_GENERATOR ->
+                                                            state.hashGeneratorEnabled
+                                                        ToolSettingId.URL_CODEC ->
+                                                            state.urlCodecEnabled
+                                                        ToolSettingId.TIMESTAMP_CONVERTER ->
+                                                            state.timestampConverterEnabled
+                                                        ToolSettingId.CURRENCY_CONVERTER ->
                                                             state.currencyConverterEnabled
                                                     ToolSettingId.WORD_CLOCK -> state.worldClockEnabled
                                                     ToolSettingId.DICTIONARY -> state.dictionaryEnabled
@@ -370,7 +378,15 @@ internal fun SettingsDetailLevel2Screen(
                                 when (toolId) {
                                     ToolSettingId.COLOR_VISUALIZER ->
                                             callbacks.onToggleColorVisualizer(enabled)
-                                    ToolSettingId.CURRENCY_CONVERTER ->
+                                    ToolSettingId.BASE64_CODEC ->
+                                            callbacks.onToggleBase64Codec(enabled)
+ToolSettingId.HASH_GENERATOR ->
+                                            callbacks.onToggleHashGenerator(enabled)
+                                        ToolSettingId.URL_CODEC ->
+                                            callbacks.onToggleUrlCodec(enabled)
+                                        ToolSettingId.TIMESTAMP_CONVERTER ->
+                                            callbacks.onToggleTimestampConverter(enabled)
+                                        ToolSettingId.CURRENCY_CONVERTER ->
                                             callbacks.onToggleCurrencyConverter(enabled)
                                     ToolSettingId.WORD_CLOCK -> callbacks.onToggleWorldClock(enabled)
                                     ToolSettingId.WEATHER -> callbacks.onToggleWeather(enabled)

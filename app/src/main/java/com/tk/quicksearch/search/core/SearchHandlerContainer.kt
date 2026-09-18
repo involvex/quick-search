@@ -37,11 +37,15 @@ import com.tk.quicksearch.tools.aiTools.CurrencyConverterHandler
 import com.tk.quicksearch.tools.aiTools.DictionaryHandler
 import com.tk.quicksearch.tools.aiTools.WeatherHandler
 import com.tk.quicksearch.tools.aiTools.WorldClockHandler
+import com.tk.quicksearch.tools.base64Codec.Base64CodecHandler
 import com.tk.quicksearch.tools.calculator.CalculatorHandler
 import com.tk.quicksearch.tools.colorVisualizer.ColorVisualizerHandler
 import com.tk.quicksearch.tools.dateCalculator.DateCalculatorHandler
+import com.tk.quicksearch.tools.hashGenerator.HashGeneratorHandler
+import com.tk.quicksearch.tools.timestampConverter.TimestampConverterHandler
 import com.tk.quicksearch.tools.aiSearch.AiSearchHandler
 import com.tk.quicksearch.tools.unitConverter.UnitConverterHandler
+import com.tk.quicksearch.tools.urlCodec.URLCodecHandler
 import com.tk.quicksearch.tools.tasker.TaskerIntegration
 import com.tk.quicksearch.tools.termux.TermuxCommandHandler
 import kotlinx.coroutines.CoroutineDispatcher
@@ -182,6 +186,22 @@ internal class SearchHandlerContainer(
 
     val colorVisualizerHandler by lazy {
         ColorVisualizerHandler(userPreferences = userPreferences)
+    }
+
+    val base64CodecHandler by lazy {
+        Base64CodecHandler(userPreferences = userPreferences)
+    }
+
+    val hashGeneratorHandler by lazy {
+        HashGeneratorHandler(userPreferences = userPreferences)
+    }
+
+    val urlCodecHandler by lazy {
+        URLCodecHandler(userPreferences = userPreferences)
+    }
+
+    val timestampConverterHandler by lazy {
+        TimestampConverterHandler(userPreferences = userPreferences)
     }
 
     val currencyConverterHandler by lazy {

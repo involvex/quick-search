@@ -15,10 +15,14 @@ import com.tk.quicksearch.tools.aiTools.WorldClockNotRecognizedException
 import com.tk.quicksearch.tools.aiTools.ConfirmedWeatherQuery
 import com.tk.quicksearch.tools.aiTools.WeatherHandler
 import com.tk.quicksearch.tools.aiTools.WeatherIntentParser
+import com.tk.quicksearch.tools.base64Codec.Base64CodecHandler
 import com.tk.quicksearch.tools.calculator.CalculatorHandler
 import com.tk.quicksearch.tools.colorVisualizer.ColorVisualizerHandler
 import com.tk.quicksearch.tools.dateCalculator.DateCalculatorHandler
+import com.tk.quicksearch.tools.hashGenerator.HashGeneratorHandler
+import com.tk.quicksearch.tools.timestampConverter.TimestampConverterHandler
 import com.tk.quicksearch.tools.unitConverter.UnitConverterHandler
+import com.tk.quicksearch.tools.urlCodec.URLCodecHandler
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -42,6 +46,10 @@ internal class SearchToolCoordinator(
     private val unitConverterHandler: UnitConverterHandler,
     private val dateCalculatorHandler: DateCalculatorHandler,
     private val colorVisualizerHandler: ColorVisualizerHandler,
+    private val base64CodecHandler: Base64CodecHandler,
+    private val hashGeneratorHandler: HashGeneratorHandler,
+    private val urlCodecHandler: URLCodecHandler,
+    private val timestampConverterHandler: TimestampConverterHandler,
     private val currencyConverterHandler: CurrencyConverterHandler,
     private val worldClockHandler: WorldClockHandler,
     private val dictionaryHandler: DictionaryHandler,
@@ -115,6 +123,30 @@ internal class SearchToolCoordinator(
                         forceColorVisualizerMode = true,
                     )
 
+                SearchToolType.BASE64_CODEC ->
+                    base64CodecHandler.processQuery(
+                        query = trimmedQuery,
+                        forceBase64Mode = true,
+                    )
+
+                SearchToolType.HASH_GENERATOR ->
+                    hashGeneratorHandler.processQuery(
+                        query = trimmedQuery,
+                        forceHashMode = true,
+                    )
+
+                SearchToolType.URL_CODEC ->
+                    urlCodecHandler.processQuery(
+                        query = trimmedQuery,
+                        forceUrlCodecMode = true,
+                    )
+
+                SearchToolType.TIMESTAMP_CONVERTER ->
+                    timestampConverterHandler.processQuery(
+                        query = trimmedQuery,
+                        forceTimestampMode = true,
+                    )
+
                 SearchToolType.TERMUX_COMMAND ->
                     CalculatorState()
             }
@@ -149,6 +181,42 @@ internal class SearchToolCoordinator(
             )
         if (colorVisualizerResult.colorArgb != null) {
             return colorVisualizerResult
+        }
+
+        val base64Result =
+            base64CodecHandler.processQuery(
+                query = trimmedQuery,
+                forceBase64Mode = false,
+            )
+        if (base64Result.result != null) {
+            return base64Result
+        }
+
+        val hashResult =
+            hashGeneratorHandler.processQuery(
+                query = trimmedQuery,
+                forceHashMode = false,
+            )
+        if (hashResult.result != null) {
+            return hashResult
+        }
+
+        val urlCodecResult =
+            urlCodecHandler.processQuery(
+                query = trimmedQuery,
+                forceUrlCodecMode = false,
+            )
+        if (urlCodecResult.result != null) {
+            return urlCodecResult
+        }
+
+        val timestampResult =
+            timestampConverterHandler.processQuery(
+                query = trimmedQuery,
+                forceTimestampMode = false,
+            )
+        if (timestampResult.result != null) {
+            return timestampResult
         }
 
         return dateCalculatorHandler.processQuery(

@@ -428,6 +428,34 @@ class AppSettingsRepository(
                 keywords = listOf("color", "colour", "hex", "rgb"),
             )
             addToggle(
+                id = "app_toggle_base64_codec",
+                titleRes = R.string.base64_codec_toggle_title,
+                descriptionRes = R.string.base64_codec_toggle_desc,
+                toggleKey = AppSettingsToggleKey.BASE64_CODEC,
+                keywords = listOf("base64", "b64", "encode", "decode"),
+            )
+            addToggle(
+                id = "app_toggle_hash_generator",
+                titleRes = R.string.hash_generator_toggle_title,
+                descriptionRes = R.string.hash_generator_toggle_desc,
+                toggleKey = AppSettingsToggleKey.HASH_GENERATOR,
+                keywords = listOf("hash", "md5", "sha1", "sha256", "sha512"),
+            )
+            addToggle(
+                id = "app_toggle_url_codec",
+                titleRes = R.string.url_codec_toggle_title,
+                descriptionRes = R.string.url_codec_toggle_desc,
+                toggleKey = AppSettingsToggleKey.URL_CODEC,
+                keywords = listOf("url", "encode", "decode", "percent"),
+            )
+            addToggle(
+                id = "app_toggle_timestamp_converter",
+                titleRes = R.string.timestamp_converter_toggle_title,
+                descriptionRes = R.string.timestamp_converter_toggle_desc,
+                toggleKey = AppSettingsToggleKey.TIMESTAMP_CONVERTER,
+                keywords = listOf("epoch", "iso", "timestamp", "date"),
+            )
+            addToggle(
                 id = "app_toggle_dictionary",
                 titleRes = R.string.dictionary_toggle_title,
                 descriptionRes = R.string.dictionary_toggle_desc,

@@ -509,6 +509,26 @@ internal class SearchQueryCoordinator(
                     isColorVisualizerMode = true,
                     toolType = SearchToolType.COLOR_VISUALIZER,
                 )
+            SearchToolType.BASE64_CODEC ->
+                CalculatorState(
+                    isBase64Mode = true,
+                    toolType = SearchToolType.BASE64_CODEC,
+                )
+            SearchToolType.HASH_GENERATOR ->
+                CalculatorState(
+                    isHashMode = true,
+                    toolType = SearchToolType.HASH_GENERATOR,
+                )
+            SearchToolType.URL_CODEC ->
+                CalculatorState(
+                    isUrlCodecMode = true,
+                    toolType = SearchToolType.URL_CODEC,
+                )
+            SearchToolType.TIMESTAMP_CONVERTER ->
+                CalculatorState(
+                    isTimestampMode = true,
+                    toolType = SearchToolType.TIMESTAMP_CONVERTER,
+                )
             SearchToolType.TERMUX_COMMAND ->
                 CalculatorState(
                     toolType = SearchToolType.TERMUX_COMMAND,

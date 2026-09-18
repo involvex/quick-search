@@ -17,6 +17,9 @@ internal interface SearchViewModelPreferencesApi {
     fun setColorVisualizerEnabled(enabled: Boolean) =
         preferencesApiDelegate.setColorVisualizerEnabled(enabled)
 
+    fun setBase64CodecEnabled(enabled: Boolean) =
+        preferencesApiDelegate.setBase64CodecEnabled(enabled)
+
     fun setCurrencyConverterEnabled(enabled: Boolean) =
         preferencesApiDelegate.setCurrencyConverterEnabled(enabled)
 
@@ -313,6 +316,14 @@ class SearchViewModelPreferencesApiDelegate internal constructor(
     fun setDateCalculatorEnabled(enabled: Boolean) = preferencesDelegate.setDateCalculatorEnabled(enabled)
 
     fun setColorVisualizerEnabled(enabled: Boolean) = preferencesDelegate.setColorVisualizerEnabled(enabled)
+
+    fun setBase64CodecEnabled(enabled: Boolean) = preferencesDelegate.setBase64CodecEnabled(enabled)
+
+    fun setHashGeneratorEnabled(enabled: Boolean) = preferencesDelegate.setHashGeneratorEnabled(enabled)
+
+    fun setUrlCodecEnabled(enabled: Boolean) = preferencesDelegate.setUrlCodecEnabled(enabled)
+
+    fun setTimestampConverterEnabled(enabled: Boolean) = preferencesDelegate.setTimestampConverterEnabled(enabled)
 
     fun setCurrencyConverterEnabled(enabled: Boolean) =
         preferencesDelegate.setCurrencyConverterEnabled(enabled)

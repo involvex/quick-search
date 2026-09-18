@@ -893,6 +893,15 @@
     <string name="color_visualizer_toggle_title">Color Visualizer</string>
     <string name="color_visualizer_toggle_desc">Examples: #FF0000, rgb(255, 0, 0)</string>
     <string name="color_visualizer_invalid_input">Enter a hex or RGB color</string>
+    <string name="base64_codec_toggle_title">Base64 Codec</string>
+    <string name="base64_codec_toggle_desc">Examples: b64 aGVsbG8=, encode hello</string>
+    <string name="base64_codec_invalid_input">Enter Base64 text or encode/decode command</string>
+    <string name="hash_generator_toggle_title">Hash Generator</string>
+    <string name="hash_generator_toggle_desc">Examples: md5 hello, sha256 hello</string>
+    <string name="url_codec_toggle_title">URL Codec</string>
+    <string name="url_codec_toggle_desc">Examples: url encode hello world, url decode hello%20world</string>
+    <string name="timestamp_converter_toggle_title">Timestamp Converter</string>
+    <string name="timestamp_converter_toggle_desc">Examples: epoch 1704067200, iso 2024-01-01T00:00:00Z</string>
     <string name="currency_converter_updated">Updated %1$s</string>
     <string name="date_calculator_category_absolute_time">Absolute Time</string>
     <string name="date_calculator_category_date_differences">Date Differences</string>

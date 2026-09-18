@@ -213,8 +213,12 @@ enum class SearchToolType {
         UNIT_CONVERTER,
         DATE_CALCULATOR,
         COLOR_VISUALIZER,
+        BASE64_CODEC,
+        HASH_GENERATOR,
+        URL_CODEC,
+        TIMESTAMP_CONVERTER,
         TERMUX_COMMAND,
-}
+    }
 
 data class AiSearchState(
         val status: AiSearchStatus = AiSearchStatus.Idle,
@@ -317,6 +321,10 @@ data class CalculatorState(
         val isUnitConverterMode: Boolean = false,
         val isDateCalculatorMode: Boolean = false,
         val isColorVisualizerMode: Boolean = false,
+        val isBase64Mode: Boolean = false,
+        val isHashMode: Boolean = false,
+        val isUrlCodecMode: Boolean = false,
+        val isTimestampMode: Boolean = false,
         /** Parsed opaque ARGB color for the Color Visualizer tool. */
         val colorArgb: Int? = null,
         val toolType: SearchToolType = SearchToolType.CALCULATOR,
@@ -338,8 +346,8 @@ data class CalculatorState(
         val timeContextLabel2: String? = null,
 ) {
         val isToolMode: Boolean
-                get() = isCalculatorMode || isUnitConverterMode || isDateCalculatorMode || isColorVisualizerMode
-}
+                get() = isCalculatorMode || isUnitConverterMode || isDateCalculatorMode || isColorVisualizerMode || isBase64Mode || isHashMode || isUrlCodecMode
+    }
 
 data class PhoneNumberSelection(
         val contactInfo: com.tk.quicksearch.search.models.ContactInfo,
@@ -657,6 +665,10 @@ data class SearchUiState(
         val unitConverterEnabled: Boolean = true,
         val dateCalculatorEnabled: Boolean = true,
         val colorVisualizerEnabled: Boolean = true,
+        val base64CodecEnabled: Boolean = true,
+        val hashGeneratorEnabled: Boolean = true,
+        val urlCodecEnabled: Boolean = true,
+        val timestampConverterEnabled: Boolean = true,
         val currencyConverterEnabled: Boolean = true,
         val worldClockEnabled: Boolean = true,
         val dictionaryEnabled: Boolean = true,
@@ -885,6 +897,7 @@ fun SearchUiState(
                 unitConverterEnabled = features.unitConverterEnabled,
                 dateCalculatorEnabled = features.dateCalculatorEnabled,
                 colorVisualizerEnabled = features.colorVisualizerEnabled,
+                base64CodecEnabled = features.base64CodecEnabled,
                 currencyConverterEnabled = features.currencyConverterEnabled,
                 worldClockEnabled = features.worldClockEnabled,
                 dictionaryEnabled = features.dictionaryEnabled,

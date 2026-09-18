@@ -43,6 +43,10 @@ class AliasHandler(
         const val CALCULATOR_ALIAS_FEATURE_ID = "calculator_mode"
         const val UNIT_CONVERTER_ALIAS_FEATURE_ID = "unit_converter_mode"
         const val DATE_CALCULATOR_ALIAS_FEATURE_ID = "date_calculator_mode"
+        const val BASE64_CODEC_ALIAS_FEATURE_ID = "base64_codec_mode"
+        const val HASH_GENERATOR_ALIAS_FEATURE_ID = "hash_generator_mode"
+        const val URL_CODEC_ALIAS_FEATURE_ID = "url_codec_mode"
+        const val TIMESTAMP_CONVERTER_ALIAS_FEATURE_ID = "timestamp_converter_mode"
         const val CURRENCY_CONVERTER_ALIAS_FEATURE_ID = "currency_converter_mode"
         const val WORD_CLOCK_ALIAS_FEATURE_ID = "word_clock_mode"
         const val DICTIONARY_ALIAS_FEATURE_ID = "dictionary_mode"
@@ -77,6 +81,22 @@ class AliasHandler(
                 FeatureAliasDefinition(
                     featureId = DATE_CALCULATOR_ALIAS_FEATURE_ID,
                     toolType = SearchToolType.DATE_CALCULATOR,
+                ),
+                FeatureAliasDefinition(
+                    featureId = BASE64_CODEC_ALIAS_FEATURE_ID,
+                    toolType = SearchToolType.BASE64_CODEC,
+                ),
+                FeatureAliasDefinition(
+                    featureId = HASH_GENERATOR_ALIAS_FEATURE_ID,
+                    toolType = SearchToolType.HASH_GENERATOR,
+                ),
+                FeatureAliasDefinition(
+                    featureId = URL_CODEC_ALIAS_FEATURE_ID,
+                    toolType = SearchToolType.URL_CODEC,
+                ),
+                FeatureAliasDefinition(
+                    featureId = TIMESTAMP_CONVERTER_ALIAS_FEATURE_ID,
+                    toolType = SearchToolType.TIMESTAMP_CONVERTER,
                 ),
                 FeatureAliasDefinition(
                     featureId = CURRENCY_CONVERTER_ALIAS_FEATURE_ID,

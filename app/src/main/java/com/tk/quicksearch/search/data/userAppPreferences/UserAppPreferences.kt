@@ -1468,6 +1468,22 @@ class UserAppPreferences(
 
     fun setColorVisualizerEnabled(enabled: Boolean) = uiPreferences.setColorVisualizerEnabled(enabled)
 
+    fun isBase64CodecEnabled(): Boolean = uiPreferences.isBase64CodecEnabled()
+
+    fun setBase64CodecEnabled(enabled: Boolean) = uiPreferences.setBase64CodecEnabled(enabled)
+
+    fun isHashGeneratorEnabled(): Boolean = uiPreferences.isHashGeneratorEnabled()
+
+    fun setHashGeneratorEnabled(enabled: Boolean) = uiPreferences.setHashGeneratorEnabled(enabled)
+
+    fun isUrlCodecEnabled(): Boolean = uiPreferences.isUrlCodecEnabled()
+
+    fun setUrlCodecEnabled(enabled: Boolean) = uiPreferences.setUrlCodecEnabled(enabled)
+
+    fun isTimestampConverterEnabled(): Boolean = uiPreferences.isTimestampConverterEnabled()
+
+    fun setTimestampConverterEnabled(enabled: Boolean) = uiPreferences.setTimestampConverterEnabled(enabled)
+
     fun isWorldClockEnabled(): Boolean = uiPreferences.isWorldClockEnabled()
 
     fun setWorldClockEnabled(enabled: Boolean) = uiPreferences.setWorldClockEnabled(enabled)

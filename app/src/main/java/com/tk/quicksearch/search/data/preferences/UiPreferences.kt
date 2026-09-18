@@ -972,6 +972,34 @@ class UiPreferences(
         setBooleanPref(UiPreferences.KEY_COLOR_VISUALIZER_ENABLED, enabled)
     }
 
+    fun isBase64CodecEnabled(): Boolean =
+            getBooleanPref(UiPreferences.KEY_BASE64_CODEC_ENABLED, true)
+
+    fun setBase64CodecEnabled(enabled: Boolean) {
+        setBooleanPref(UiPreferences.KEY_BASE64_CODEC_ENABLED, enabled)
+    }
+
+    fun isHashGeneratorEnabled(): Boolean =
+            getBooleanPref(UiPreferences.KEY_HASH_GENERATOR_ENABLED, true)
+
+    fun setHashGeneratorEnabled(enabled: Boolean) {
+        setBooleanPref(UiPreferences.KEY_HASH_GENERATOR_ENABLED, enabled)
+    }
+
+    fun isUrlCodecEnabled(): Boolean =
+            getBooleanPref(UiPreferences.KEY_URL_CODEC_ENABLED, true)
+
+    fun setUrlCodecEnabled(enabled: Boolean) {
+        setBooleanPref(UiPreferences.KEY_URL_CODEC_ENABLED, enabled)
+    }
+
+    fun isTimestampConverterEnabled(): Boolean =
+            getBooleanPref(UiPreferences.KEY_TIMESTAMP_CONVERTER_ENABLED, true)
+
+    fun setTimestampConverterEnabled(enabled: Boolean) {
+        setBooleanPref(UiPreferences.KEY_TIMESTAMP_CONVERTER_ENABLED, enabled)
+    }
+
     fun isWorldClockEnabled(): Boolean =
             getBooleanPref(UiPreferences.KEY_WORD_CLOCK_ENABLED, true)
 
@@ -1496,6 +1524,10 @@ class UiPreferences(
         const val KEY_DATE_CALCULATOR_ENABLED = "date_calculator_enabled"
         const val KEY_CURRENCY_CONVERTER_ENABLED = "currency_converter_enabled"
         const val KEY_COLOR_VISUALIZER_ENABLED = "color_visualizer_enabled"
+        const val KEY_BASE64_CODEC_ENABLED = "base64_codec_enabled"
+        const val KEY_HASH_GENERATOR_ENABLED = "hash_generator_enabled"
+        const val KEY_URL_CODEC_ENABLED = "url_codec_enabled"
+        const val KEY_TIMESTAMP_CONVERTER_ENABLED = "timestamp_converter_enabled"
         const val KEY_WORD_CLOCK_ENABLED = "word_clock_enabled"
         const val KEY_DICTIONARY_ENABLED = "dictionary_enabled"
         const val KEY_CURRENCY_CONVERTER_MODEL = "currency_converter_model"

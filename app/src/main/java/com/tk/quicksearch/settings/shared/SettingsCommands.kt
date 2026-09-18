@@ -13,7 +13,17 @@ import com.tk.quicksearch.search.core.SearchSectionRegistry
 import com.tk.quicksearch.search.core.SearchSection
 import com.tk.quicksearch.search.core.SearchUiState
 import com.tk.quicksearch.search.core.SearchViewModel
+import com.tk.quicksearch.search.core.SearchViewModelPreferencesApi
 import com.tk.quicksearch.search.models.SecondaryRankingSignal
+
+private fun SearchViewModel.setUrlCodecEnabled(enabled: Boolean) =
+    (this as SearchViewModelPreferencesApi).preferencesApiDelegate.setUrlCodecEnabled(enabled)
+
+private fun SearchViewModel.setHashGeneratorEnabled(enabled: Boolean) =
+    (this as SearchViewModelPreferencesApi).preferencesApiDelegate.setHashGeneratorEnabled(enabled)
+
+private fun SearchViewModel.setTimestampConverterEnabled(enabled: Boolean) =
+    (this as SearchViewModelPreferencesApi).preferencesApiDelegate.setTimestampConverterEnabled(enabled)
 
 sealed interface SettingsCommand {
     data class Toggle(
@@ -108,6 +118,10 @@ internal fun SearchViewModel.applySettingsCommand(command: SettingsCommand) {
                 AppSettingsToggleKey.UNIT_CONVERTER -> setUnitConverterEnabled(command.enabled)
                 AppSettingsToggleKey.DATE_CALCULATOR -> setDateCalculatorEnabled(command.enabled)
                 AppSettingsToggleKey.COLOR_VISUALIZER -> setColorVisualizerEnabled(command.enabled)
+                AppSettingsToggleKey.BASE64_CODEC -> setBase64CodecEnabled(command.enabled)
+                AppSettingsToggleKey.HASH_GENERATOR -> setHashGeneratorEnabled(command.enabled)
+                AppSettingsToggleKey.URL_CODEC -> setUrlCodecEnabled(command.enabled)
+                AppSettingsToggleKey.TIMESTAMP_CONVERTER -> setTimestampConverterEnabled(command.enabled)
                 AppSettingsToggleKey.APP_SUGGESTIONS -> setAppSuggestionsEnabled(command.enabled)
                 AppSettingsToggleKey.SHOW_ALL_APPS_BUTTON -> setShowAllAppsButton(command.enabled)
                 AppSettingsToggleKey.INCLUDE_NON_LAUNCHABLE_APPS_IN_SEARCH ->
@@ -214,6 +228,10 @@ internal fun SearchUiState.isAppSettingToggleEnabled(toggleKey: AppSettingsToggl
         AppSettingsToggleKey.UNIT_CONVERTER -> unitConverterEnabled
         AppSettingsToggleKey.DATE_CALCULATOR -> dateCalculatorEnabled
         AppSettingsToggleKey.COLOR_VISUALIZER -> colorVisualizerEnabled
+        AppSettingsToggleKey.BASE64_CODEC -> base64CodecEnabled
+        AppSettingsToggleKey.HASH_GENERATOR -> hashGeneratorEnabled
+        AppSettingsToggleKey.URL_CODEC -> urlCodecEnabled
+        AppSettingsToggleKey.TIMESTAMP_CONVERTER -> timestampConverterEnabled
         AppSettingsToggleKey.APP_SUGGESTIONS -> appSuggestionsEnabled
         AppSettingsToggleKey.SHOW_ALL_APPS_BUTTON -> showAllAppsButton
         AppSettingsToggleKey.INCLUDE_NON_LAUNCHABLE_APPS_IN_SEARCH ->

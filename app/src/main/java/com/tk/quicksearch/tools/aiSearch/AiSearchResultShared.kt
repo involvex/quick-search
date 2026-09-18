@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccessTime
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Palette
@@ -324,6 +325,10 @@ internal fun CalculatorAttributionRow(
                 SearchToolType.UNIT_CONVERTER -> R.string.unit_converter_info_title
                 SearchToolType.DATE_CALCULATOR -> R.string.date_calculator_info_title
                 SearchToolType.COLOR_VISUALIZER -> R.string.color_visualizer_toggle_title
+                SearchToolType.BASE64_CODEC -> R.string.base64_codec_toggle_title
+                SearchToolType.HASH_GENERATOR -> R.string.hash_generator_toggle_title
+                SearchToolType.URL_CODEC -> R.string.url_codec_toggle_title
+                SearchToolType.TIMESTAMP_CONVERTER -> R.string.timestamp_converter_toggle_title
                 SearchToolType.CALCULATOR -> R.string.calculator_toggle_title
                 else -> R.string.calculator_toggle_title
             }
@@ -332,6 +337,10 @@ internal fun CalculatorAttributionRow(
                 SearchToolType.UNIT_CONVERTER -> Icons.Rounded.Straighten
                 SearchToolType.DATE_CALCULATOR -> Icons.Rounded.CalendarMonth
                 SearchToolType.COLOR_VISUALIZER -> Icons.Rounded.Palette
+                SearchToolType.BASE64_CODEC -> Icons.Rounded.Calculate
+                SearchToolType.HASH_GENERATOR -> Icons.Rounded.Calculate
+                SearchToolType.URL_CODEC -> Icons.Rounded.Calculate
+                SearchToolType.TIMESTAMP_CONVERTER -> Icons.Rounded.AccessTime
                 SearchToolType.CALCULATOR -> Icons.Rounded.Calculate
                 else -> Icons.Rounded.Calculate
             }

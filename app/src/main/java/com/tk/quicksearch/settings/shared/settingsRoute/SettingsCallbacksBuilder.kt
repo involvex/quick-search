@@ -3,10 +3,20 @@ package com.tk.quicksearch.settings.shared
 import com.tk.quicksearch.search.core.SearchSection
 import com.tk.quicksearch.search.core.SearchTarget
 import com.tk.quicksearch.search.core.SearchViewModel
+import com.tk.quicksearch.search.core.SearchViewModelPreferencesApi
 import com.tk.quicksearch.search.data.AppShortcutRepository.SearchTargetShortcutMode
 import com.tk.quicksearch.searchEngines.AliasHandler
 import com.tk.quicksearch.settings.settingsDetailScreen.AiBackedToolConfigId
 import com.tk.quicksearch.settings.AppShortcutsSettings.AppShortcutSource
+
+private fun SearchViewModel.setHashGeneratorEnabled(enabled: Boolean) =
+    (this as SearchViewModelPreferencesApi).preferencesApiDelegate.setHashGeneratorEnabled(enabled)
+
+private fun SearchViewModel.setUrlCodecEnabled(enabled: Boolean) =
+    (this as SearchViewModelPreferencesApi).preferencesApiDelegate.setUrlCodecEnabled(enabled)
+
+private fun SearchViewModel.setTimestampConverterEnabled(enabled: Boolean) =
+    (this as SearchViewModelPreferencesApi).preferencesApiDelegate.setTimestampConverterEnabled(enabled)
 
 internal data class SettingsRouteHandlers(
     val onBack: () -> Unit,
@@ -123,6 +133,10 @@ internal fun buildSettingsScreenCallbacks(
         onToggleUnitConverter = viewModel::setUnitConverterEnabled,
         onToggleDateCalculator = viewModel::setDateCalculatorEnabled,
         onToggleColorVisualizer = viewModel::setColorVisualizerEnabled,
+        onToggleBase64Codec = viewModel::setBase64CodecEnabled,
+        onToggleHashGenerator = viewModel::setHashGeneratorEnabled,
+        onToggleUrlCodec = viewModel::setUrlCodecEnabled,
+        onToggleTimestampConverter = viewModel::setTimestampConverterEnabled,
         onToggleCurrencyConverter = viewModel::setCurrencyConverterEnabled,
         onToggleWorldClock = viewModel::setWorldClockEnabled,
         onToggleDictionary = viewModel::setDictionaryEnabled,
