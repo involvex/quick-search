@@ -5,6 +5,14 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 object HashGeneratorUtils {
+    /**
+     * Supported hash algorithms.
+     * 
+     * @note MD5 and SHA-1 are cryptographically broken and MUST NOT be used for
+     * security-sensitive purposes (passwords, tokens, signatures, integrity verification).
+     * They are provided only for compatibility/legacy use cases.
+     * For cryptographic use, prefer SHA-256 or SHA-512.
+     */
     enum class Algorithm(val algorithmName: String, val displayName: String, val aliasPrefix: String) {
         MD5("MD5", "MD5", "md5 "),
         SHA1("SHA-1", "SHA-1", "sha1 "),
@@ -13,6 +21,9 @@ object HashGeneratorUtils {
     }
 
     private val hashPrefixPattern = Regex("^(md5|sha1|sha256|sha512)\\s+", RegexOption.IGNORE_CASE)
+
+    /** Hex character lookup table for fast byte-to-hex conversion. */
+    private val HEX_CHARS = "0123456789abcdef".toCharArray()
 
     fun isCandidate(query: String): Boolean {
         val trimmed = query.trim()
@@ -33,12 +44,18 @@ object HashGeneratorUtils {
         }
     }
 
+    /**
+     * Converts a byte array to a lowercase hex string using a lookup table.
+     * Avoids String.format allocations for better performance.
+     */
     private fun bytesToHex(bytes: ByteArray): String {
-        val sb = StringBuilder(bytes.size * 2)
-        for (b in bytes) {
-            sb.append(String.format("%02x", b))
+        val chars = CharArray(bytes.size * 2)
+        for (i in bytes.indices) {
+            val b = bytes[i].toInt() and 0xFF
+            chars[i * 2] = HEX_CHARS[b ushr 4]
+            chars[i * 2 + 1] = HEX_CHARS[b and 0xF]
         }
-        return sb.toString()
+        return String(chars)
     }
 
     fun detectAndProcess(query: String): Triple<String, String, Algorithm>? {

@@ -1,13 +1,25 @@
 package com.tk.quicksearch.tools.timestampConverter
 
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.time.temporal.TemporalAccessor
+import java.time.temporal.TemporalQueries
 
 object TimestampConverterUtils {
     private val epochPattern = Regex("^\\d{10,13}$")
     private val isoPattern = Regex("^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?(Z|[+-]\\d{2}:?\\d{2})?$")
+
+    private val isoFormatter = DateTimeFormatter.ISO_INSTANT
+    private val isoWithMillisFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private val isoWithOffsetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
+    private val isoBasicFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")
+    private val localDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private val localDateTimeWithMillisFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private val outputIsoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneId.of("UTC"))
+    private val outputLocalFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
     fun isCandidate(query: String): Boolean {
         val trimmed = query.trim()
@@ -19,36 +31,50 @@ object TimestampConverterUtils {
     }
 
     fun epochToIso(epochMillis: Long): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-        sdf.timeZone = TimeZone.getTimeZone("UTC")
-        return sdf.format(Date(epochMillis))
+        return Instant.ofEpochMilli(epochMillis).atZone(ZoneId.of("UTC")).format(outputIsoFormatter)
     }
 
     fun epochToLocal(epochMillis: Long): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return sdf.format(Date(epochMillis))
+        return Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).format(outputLocalFormatter)
+    }
+
+    private fun parseAsInstant(iso: String, formatter: DateTimeFormatter): Long? {
+        try {
+            return formatter.parse(iso, Instant::from).toEpochMilli()
+        } catch (e: DateTimeParseException) {
+            return null
+        }
+    }
+
+    private fun parseAsLocalDateTime(iso: String, formatter: DateTimeFormatter): Long? {
+        try {
+            val temporal: TemporalAccessor = formatter.parse(iso)
+            val localDateTime = LocalDateTime.from(temporal)
+            return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        } catch (e: DateTimeParseException) {
+            return null
+        }
     }
 
     fun isoToEpoch(iso: String): Long? {
-        val formats = listOf(
-            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
-            "yyyy-MM-dd'T'HH:mm:ssZ",
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd'T'HH:mm:ss",
-            "yyyy-MM-dd'T'HH:mm:ss.SSS"
-        )
-        for (format in formats) {
-            try {
-                val sdf = SimpleDateFormat(format, Locale.US)
-                if (format.endsWith("Z") || format.contains("ZZ")) {
-                    sdf.timeZone = TimeZone.getTimeZone("UTC")
-                }
-                return sdf.parse(iso)?.time
-            } catch (e: Exception) {
-                // Try next format
-            }
-        }
+        // Try ISO_INSTANT first (handles Z and offset)
+        parseAsInstant(iso, isoFormatter)?.let { return it }
+
+        // Try with milliseconds and offset (e.g., 2024-01-01T00:00:00.000+05:00)
+        parseAsInstant(iso, isoWithMillisFormatter)?.let { return it }
+
+        // Try with offset only (e.g., 2024-01-01T00:00:00+05:00)
+        parseAsInstant(iso, isoWithOffsetFormatter)?.let { return it }
+
+        // Try basic ISO with offset (e.g., 2024-01-01T00:00:00Z)
+        parseAsInstant(iso, isoBasicFormatter)?.let { return it }
+
+        // Try local date-time (assume system default zone)
+        parseAsLocalDateTime(iso, localDateTimeFormatter)?.let { return it }
+
+        // Try local date-time with millis
+        parseAsLocalDateTime(iso, localDateTimeWithMillisFormatter)?.let { return it }
+
         return null
     }
 

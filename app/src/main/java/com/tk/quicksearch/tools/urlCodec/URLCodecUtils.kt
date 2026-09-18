@@ -37,12 +37,16 @@ object URLCodecUtils {
 
         return when {
             urlEncodePattern.matches(lower) -> {
-                val payload = trimmed.substringAfter(" ").trim()
+                val matchResult = urlEncodePattern.find(lower)!!
+                val prefixEnd = matchResult.range.last + 1
+                val payload = trimmed.substring(prefixEnd).trim()
                 if (payload.isEmpty()) return null
                 payload to encode(payload)
             }
             urlDecodePattern.matches(lower) -> {
-                val payload = trimmed.substringAfter(" ").trim()
+                val matchResult = urlDecodePattern.find(lower)!!
+                val prefixEnd = matchResult.range.last + 1
+                val payload = trimmed.substring(prefixEnd).trim()
                 val decoded = decode(payload) ?: return null
                 payload to decoded
             }
